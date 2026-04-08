@@ -16,6 +16,8 @@ def _build_components(config: dict):
     embedder = Embedder(
         api_key=config["embedding"].get("api_key", ""),
         model=config["embedding"]["model"],
+        base_url=config["embedding"].get("base_url"),
+        provider=config["embedding"].get("provider", "local"),
     )
     vector_store = VectorStore(
         path=config["qdrant"]["path"],

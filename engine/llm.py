@@ -10,7 +10,7 @@ class LLMProvider(ABC):
 class ClaudeProvider(LLMProvider):
     def __init__(self, model: str, api_key: str, base_url: str = None):
         import anthropic
-        kwargs = {"api_key": api_key}
+        kwargs = {"api_key": api_key, "timeout": 120.0}
         if base_url:
             kwargs["base_url"] = base_url
         self.client = anthropic.Anthropic(**kwargs)
@@ -22,8 +22,12 @@ class ClaudeProvider(LLMProvider):
             messages.append({"role": "user", "content": context})
             messages.append({"role": "assistant", "content": "我已阅读上述内容，请告诉我需要做什么。"})
         messages.append({"role": "user", "content": prompt})
-        response = self.client.messages.create(model=self.model, max_tokens=8192, messages=messages)
-        return response.content[0].text
+        # Use streaming to avoid gateway timeouts on third-party proxies
+        result = []
+        with self.client.messages.stream(model=self.model, max_tokens=8192, messages=messages) as stream:
+            for text in stream.text_stream:
+                result.append(text)
+        return "".join(result)
 
 
 class OpenAIProvider(LLMProvider):

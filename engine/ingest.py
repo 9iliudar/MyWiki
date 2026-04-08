@@ -8,6 +8,7 @@ import frontmatter
 from engine.prompts import INGEST_PROMPT
 from engine.wiki_io import WikiIO
 from engine.llm import LLMProvider
+from engine.json_utils import parse_llm_json
 
 
 class IngestPipeline:
@@ -25,7 +26,9 @@ class IngestPipeline:
         source_content = source_path.read_text(encoding="utf-8")
         existing_pages = ", ".join(self.wiki.list_pages()) or "（暂无页面）"
 
-        prompt = INGEST_PROMPT.format(source_content=source_content, existing_pages=existing_pages, schema=self.schema)
+        # Truncate schema to essential rules to reduce prompt size
+        schema_short = self.schema[:800] if len(self.schema) > 800 else self.schema
+        prompt = INGEST_PROMPT.format(source_content=source_content, existing_pages=existing_pages, schema=schema_short)
         raw_response = self.llm.complete(prompt)
         response = self._parse_json(raw_response)
 
@@ -90,12 +93,4 @@ class IngestPipeline:
 
     @staticmethod
     def _parse_json(text: str) -> dict:
-        if "```json" in text:
-            start = text.index("```json") + 7
-            end = text.index("```", start)
-            text = text[start:end].strip()
-        elif "```" in text:
-            start = text.index("```") + 3
-            end = text.index("```", start)
-            text = text[start:end].strip()
-        return json.loads(text)
+        return parse_llm_json(text)

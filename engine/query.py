@@ -4,6 +4,7 @@ from datetime import date
 from engine.prompts import QUERY_PROMPT
 from engine.wiki_io import WikiIO
 from engine.llm import LLMProvider
+from engine.json_utils import parse_llm_json
 
 
 class QueryPipeline:
@@ -56,12 +57,4 @@ class QueryPipeline:
 
     @staticmethod
     def _parse_json(text: str) -> dict:
-        if "```json" in text:
-            start = text.index("```json") + 7
-            end = text.index("```", start)
-            text = text[start:end].strip()
-        elif "```" in text:
-            start = text.index("```") + 3
-            end = text.index("```", start)
-            text = text[start:end].strip()
-        return json.loads(text)
+        return parse_llm_json(text)

@@ -42,18 +42,30 @@ class VectorStore:
 
 
 class Embedder:
-    def __init__(self, api_key: str, model: str = "text-embedding-3-small", base_url: str = None):
-        import openai
-        kwargs = {"api_key": api_key}
-        if base_url:
-            kwargs["base_url"] = base_url
-        self.client = openai.OpenAI(**kwargs)
-        self.model = model
+    """Generate embeddings. Supports OpenAI API or local fastembed."""
+
+    def __init__(self, api_key: str = "", model: str = "text-embedding-3-small", base_url: str = None, provider: str = "local"):
+        self.provider = provider
+        if provider == "local":
+            from fastembed import TextEmbedding
+            self._local_model = TextEmbedding(model_name="BAAI/bge-small-zh-v1.5")
+        else:
+            import openai
+            kwargs = {"api_key": api_key}
+            if base_url:
+                kwargs["base_url"] = base_url
+            self.client = openai.OpenAI(**kwargs)
+            self.model = model
 
     def embed(self, text: str) -> list[float]:
+        if self.provider == "local":
+            results = list(self._local_model.embed([text]))
+            return results[0].tolist()
         response = self.client.embeddings.create(model=self.model, input=text)
         return response.data[0].embedding
 
     def embed_batch(self, texts: list[str]) -> list[list[float]]:
+        if self.provider == "local":
+            return [r.tolist() for r in self._local_model.embed(texts)]
         response = self.client.embeddings.create(model=self.model, input=texts)
         return [item.embedding for item in response.data]
