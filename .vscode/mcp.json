@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "wiki-engine": {
+      "command": "python",
+      "args": ["-m", "engine.mcp_server"],
+      "cwd": "D:/Project/MyWiki"
+    }
+  }
+}
