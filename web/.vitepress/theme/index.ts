@@ -1,4 +1,5 @@
 import DefaultTheme from "vitepress/theme";
+import "./custom.css";
 import Layout from "./Layout.vue";
 import WikiHome from "./components/WikiHome.vue";
 import KnowledgeGraph from "./components/KnowledgeGraph.vue";

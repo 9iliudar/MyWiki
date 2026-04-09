@@ -1,0 +1,95 @@
+/* Search modal card-style results */
+.VPLocalSearchBox .result {
+  border: 1px solid var(--vp-c-divider) !important;
+  border-radius: 10px !important;
+  margin-bottom: 0.5rem !important;
+  padding: 0.8rem 1rem !important;
+  background: var(--vp-c-bg-soft) !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.VPLocalSearchBox .result:hover,
+.VPLocalSearchBox .result.selected {
+  border-color: rgba(139, 92, 246, 0.35) !important;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.05) !important;
+}
+
+.VPLocalSearchBox .result .title {
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+}
+
+.VPLocalSearchBox .result .excerpt {
+  font-size: 0.82rem !important;
+  color: var(--vp-c-text-2) !important;
+  line-height: 1.5 !important;
+}
+
+.VPLocalSearchBox .results {
+  padding: 0.5rem !important;
+}
+
+/* Subtle scrollbar for search results */
+.VPLocalSearchBox .results::-webkit-scrollbar {
+  width: 4px;
+}
+
+.VPLocalSearchBox .results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.VPLocalSearchBox .results::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.15);
+  border-radius: 4px;
+}
+
+.VPLocalSearchBox .results::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.3);
+}
+
+/* Global subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.2);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.35);
+}
+
+/* Remove hover highlight from nav search button */
+.VPNavBarSearchButton:hover,
+.VPNavBarSearch .DocSearch-Button:hover,
+button.DocSearch.DocSearch-Button:hover,
+.VPNavBarSearchButton:focus,
+#local-search button:hover {
+  border-color: transparent !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  outline: none !important;
+}
+
+/* Tone down search modal input border */
+.VPLocalSearchBox .search-bar {
+  border-color: var(--vp-c-divider) !important;
+  box-shadow: none !important;
+}
+
+.VPLocalSearchBox .search-bar:focus-within {
+  border-color: rgba(139, 92, 246, 0.3) !important;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.06) !important;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.2) transparent;
+}

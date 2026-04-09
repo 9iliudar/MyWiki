@@ -15,6 +15,7 @@ interface GraphEdge {
 
 const container = ref<HTMLDivElement | null>(null);
 let simulation: d3.Simulation<GraphNode, GraphEdge> | null = null;
+let resizeObserver: ResizeObserver | null = null;
 
 onMounted(async () => {
   if (!container.value) return;
@@ -28,14 +29,25 @@ onMounted(async () => {
   }
 
   const width = container.value.clientWidth;
-  const height = 500;
+  const height = container.value.clientHeight;
 
   const svg = d3
     .select(container.value)
     .append("svg")
-    .attr("width", width)
-    .attr("height", height)
+    .attr("width", "100%")
+    .attr("height", "100%")
     .attr("viewBox", [0, 0, width, height]);
+
+  // Defs for glow filter
+  const defs = svg.append("defs");
+  const filter = defs.append("filter").attr("id", "node-glow");
+  filter
+    .append("feGaussianBlur")
+    .attr("stdDeviation", "3")
+    .attr("result", "coloredBlur");
+  const feMerge = filter.append("feMerge");
+  feMerge.append("feMergeNode").attr("in", "coloredBlur");
+  feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
   const connectionCount: Record<string, number> = {};
   graphData.nodes.forEach((n) => (connectionCount[n.id] = 0));
@@ -46,33 +58,90 @@ onMounted(async () => {
     connectionCount[tgt] = (connectionCount[tgt] || 0) + 1;
   });
 
+  // Build adjacency set for hover highlighting
+  const adjacency = new Set<string>();
+  graphData.edges.forEach((e) => {
+    const src = typeof e.source === "string" ? e.source : e.source.id;
+    const tgt = typeof e.target === "string" ? e.target : e.target.id;
+    adjacency.add(`${src}--${tgt}`);
+    adjacency.add(`${tgt}--${src}`);
+  });
+
   simulation = d3
     .forceSimulation<GraphNode>(graphData.nodes)
     .force(
       "link",
-      d3.forceLink<GraphNode, GraphEdge>(graphData.edges).id((d) => d.id).distance(80)
+      d3
+        .forceLink<GraphNode, GraphEdge>(graphData.edges)
+        .id((d) => d.id)
+        .distance(180)
     )
-    .force("charge", d3.forceManyBody().strength(-200))
-    .force("center", d3.forceCenter(width / 2, height / 2));
+    .force("charge", d3.forceManyBody().strength(-400))
+    .force("center", d3.forceCenter(width / 2, height / 2).strength(0.05))
+    .force("x", d3.forceX(width / 2).strength(0.02))
+    .force("y", d3.forceY(height / 2).strength(0.02));
 
-  const link = svg
-    .append("g")
+  // Root group for pan/zoom
+  const rootGroup = svg.append("g");
+
+  svg.call(
+    d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.3, 4])
+      .on("zoom", (event) => {
+        rootGroup.attr("transform", event.transform);
+      })
+  );
+
+  const linkGroup = rootGroup.append("g");
+  const link = linkGroup
     .selectAll("line")
     .data(graphData.edges)
     .join("line")
-    .attr("stroke", "var(--vp-c-divider)")
+    .attr("stroke", "rgba(139, 92, 246, 0.3)")
     .attr("stroke-width", 1);
 
-  const node = svg
-    .append("g")
+  const nodeGroup = rootGroup.append("g");
+  const node = nodeGroup
     .selectAll("circle")
     .data(graphData.nodes)
     .join("circle")
-    .attr("r", (d) => 5 + (connectionCount[d.id] || 0) * 2)
-    .attr("fill", "var(--vp-c-text-2)")
+    .attr("r", (d) => 3 + (connectionCount[d.id] || 0) * 0.8)
+    .attr("fill", (d) =>
+      (connectionCount[d.id] || 0) > 0 ? "#8b5cf6" : "var(--vp-c-text-3)"
+    )
+    .attr("filter", "url(#node-glow)")
     .attr("cursor", "pointer")
     .on("click", (_, d) => {
       window.location.href = `/pages/${d.id}.html`;
+    })
+    .on("mouseenter", (_, d) => {
+      // Highlight connected edges
+      link
+        .attr("stroke", (l: any) => {
+          const srcId =
+            typeof l.source === "string" ? l.source : l.source.id;
+          const tgtId =
+            typeof l.target === "string" ? l.target : l.target.id;
+          if (srcId === d.id || tgtId === d.id) return "#8b5cf6";
+          return "rgba(139, 92, 246, 0.3)";
+        })
+;
+      // Highlight connected nodes
+      node.attr("opacity", (n) => {
+        if (n.id === d.id) return 1;
+        if (adjacency.has(`${d.id}--${n.id}`)) return 1;
+        return 0.3;
+      });
+      label.attr("opacity", (n) => {
+        if (n.id === d.id) return 1;
+        if (adjacency.has(`${d.id}--${n.id}`)) return 1;
+        return 0.15;
+      });
+    })
+    .on("mouseleave", () => {
+      link.attr("stroke", "rgba(139, 92, 246, 0.3)");
+      node.attr("opacity", 1);
+      label.attr("opacity", 1);
     })
     .call(
       d3
@@ -93,17 +162,18 @@ onMounted(async () => {
         })
     );
 
-  const label = svg
-    .append("g")
+  const labelGroup = rootGroup.append("g");
+  const label = labelGroup
     .selectAll("text")
     .data(graphData.nodes)
     .join("text")
     .text((d) => d.title)
-    .attr("font-size", "11px")
-    .attr("font-family", "system-ui, sans-serif")
+    .attr("font-size", "13px")
+    .attr("font-family", "system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif")
     .attr("dx", 10)
     .attr("dy", 4)
-    .attr("fill", "var(--vp-c-text-1)");
+    .attr("fill", "var(--vp-c-text-1)")
+    .attr("pointer-events", "none");
 
   simulation.on("tick", () => {
     link
@@ -114,32 +184,43 @@ onMounted(async () => {
     node.attr("cx", (d: any) => d.x).attr("cy", (d: any) => d.y);
     label.attr("x", (d: any) => d.x).attr("y", (d: any) => d.y);
   });
+
+  // Handle resize
+  resizeObserver = new ResizeObserver(() => {
+    if (!container.value) return;
+    const w = container.value.clientWidth;
+    const h = container.value.clientHeight;
+    svg.attr("viewBox", [0, 0, w, h]);
+    simulation
+      ?.force("center", d3.forceCenter(w / 2, h / 2).strength(0.15))
+      .force("x", d3.forceX(w / 2).strength(0.05))
+      .force("y", d3.forceY(h / 2).strength(0.05));
+    simulation?.alpha(0.3).restart();
+  });
+  resizeObserver.observe(container.value);
 });
 
 onUnmounted(() => {
   simulation?.stop();
+  resizeObserver?.disconnect();
 });
 </script>
 
 <template>
-  <div class="knowledge-graph">
-    <h1>知识图谱</h1>
-    <div ref="container" class="graph-container"></div>
-  </div>
+  <div ref="container" class="graph-canvas"></div>
 </template>
 
 <style scoped>
-.knowledge-graph {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 1rem;
-  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-.graph-container {
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  overflow: hidden;
-  min-height: 500px;
+.graph-canvas {
+  position: fixed;
+  top: var(--vp-nav-height, 64px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: calc(100vh - var(--vp-nav-height, 64px));
   background: var(--vp-c-bg);
+  overflow: hidden;
+  z-index: 1;
 }
 </style>

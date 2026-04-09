@@ -40,7 +40,19 @@ function main() {
       evolution: data.evolution || [],
     });
 
-    fs.copyFileSync(srcPath, path.join(WEB_PAGES_DIR, file));
+    // Inject h1 title if not present in body
+    const bodyAfterFrontmatter = content.replace(/^---[\s\S]*?---\s*/, "");
+    const hasH1 = /^#\s+/m.test(bodyAfterFrontmatter);
+    if (!hasH1 && (data.title || name)) {
+      const title = data.title || name;
+      const injected = content.replace(
+        /^(---[\s\S]*?---\s*)/,
+        `$1\n# ${title}\n\n`
+      );
+      fs.writeFileSync(path.join(WEB_PAGES_DIR, file), injected, "utf-8");
+    } else {
+      fs.copyFileSync(srcPath, path.join(WEB_PAGES_DIR, file));
+    }
   }
 
   fs.writeFileSync(
@@ -49,14 +61,39 @@ function main() {
     "utf-8"
   );
 
+  const nameSet = new Set(allMeta.map(p => p.name));
+  // Map Chinese titles to file names for wikilink resolution
+  const titleToName = {};
+  for (const p of allMeta) {
+    titleToName[p.title] = p.name;
+    titleToName[p.name] = p.name;
+  }
   const nodes = allMeta.map(p => ({ id: p.name, title: p.title, tags: p.tags }));
+  const edgeSet = new Set();
   const edges = [];
+
+  function addEdge(source, target) {
+    if (source === target) return;
+    const key = [source, target].sort().join("||");
+    if (edgeSet.has(key)) return;
+    edgeSet.add(key);
+    edges.push({ source, target });
+  }
+
   for (const page of allMeta) {
+    // From frontmatter related field
     for (const rel of page.related) {
       const target = rel.replace(/^\[\[/, "").replace(/\]\]$/, "");
-      if (allMeta.some(p => p.name === target)) {
-        edges.push({ source: page.name, target });
-      }
+      if (nameSet.has(target)) addEdge(page.name, target);
+    }
+    // From body [[wikilinks]]
+    const srcPath = path.join(WIKI_PAGES_DIR, page.name + ".md");
+    const body = fs.readFileSync(srcPath, "utf-8");
+    const wikilinks = body.match(/\[\[([^\]]+)\]\]/g) || [];
+    for (const link of wikilinks) {
+      const raw = link.slice(2, -2);
+      const target = titleToName[raw] || raw;
+      if (nameSet.has(target)) addEdge(page.name, target);
     }
   }
 

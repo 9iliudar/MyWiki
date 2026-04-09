@@ -14,3 +14,14 @@ const { frontmatter, page } = useData();
     </template>
   </Layout>
 </template>
+
+<style>
+/* Center wiki page content */
+.VPDoc .container {
+  max-width: 100% !important;
+}
+.VPDoc .content-container {
+  max-width: 784px !important;
+  margin: 0 auto !important;
+}
+</style>

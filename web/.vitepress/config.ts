@@ -22,6 +22,13 @@ export default defineConfig({
     },
   },
 
+  transformPageData(pageData) {
+    // Auto-set h1 title for wiki pages from frontmatter
+    if (pageData.relativePath.startsWith("pages/") && pageData.frontmatter.title) {
+      pageData.title = pageData.frontmatter.title;
+    }
+  },
+
   markdown: {
     config: (md) => {
       const wikilinkRe = /\[\[([^\]]+)\]\]/g;
