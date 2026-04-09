@@ -1,61 +1,79 @@
 # LLM Wiki - Knowledge Evolution Engine
 
-This project is a personal knowledge evolution engine. When the user discusses knowledge topics, help them internalize knowledge into the wiki.
+This repository is a personal knowledge evolution system.
 
-## Core Workflow
+Its goal is not to collect everything. Its goal is to internalize what the user has actually understood and turn that into a clean, searchable, publishable knowledge network.
 
-**Chat = Input, Wiki auto-evolves, user feels nothing.**
+Read `README.md` first for the current system design.
 
-When the user shares new knowledge or reaches a conclusion worth preserving, proactively ingest it. When the user asks about something they've learned before, query the wiki first.
+## Core Operating Principle
+
+Do not equate "mentioned" with "mastered".
+
+Default behavior:
+
+- internalize only concepts the user has actually understood
+- keep growth controlled
+- avoid one conversation turning into many shallow wiki pages
+
+Repository rule:
+
+- formal knowledge goes into `wiki/MyWiki/<Category>/`
+- candidate concepts go into `wiki/candidates/<Category>/`
 
 ## Commands
 
 All commands run from the project root:
 
-```bash
-# Ingest: digest new knowledge into wiki pages
-python -m engine.cli ingest --file <path>        # digest a specific file
-python -m engine.cli ingest                       # digest all files in inbox
-
-# Query: search existing knowledge
+```powershell
+python -m engine.cli ingest --file <path> --category AI
+python -m engine.cli ingest --category AI
 python -m engine.cli query "your question here"
-
-# Lint: health check the wiki
 python -m engine.cli lint
+python -m engine.cli watch
+node web\scripts\prepare.js
 ```
 
 ## Direct Ingest from Conversation
 
-When the user wants to internalize chat content, write the content to a temporary file in `wiki/sources/inbox/`, then run ingest:
+When the user wants to internalize chat content:
 
-```bash
-# 1. Save conversation knowledge to a temp file
-cat > wiki/sources/inbox/$(date +%Y-%m-%d)_topic.md << 'CONTENT'
-<knowledge content here>
-CONTENT
+1. Save a markdown snapshot into `sources/inbox/`
+2. Include `category` in frontmatter when possible
+3. Run ingest
 
-# 2. Ingest it
-python -m engine.cli ingest
+Example:
+
+```powershell
+python -m engine.cli ingest --file sources\inbox\2026-04-09_topic.md --category AI
 ```
 
 ## Key Directories
 
-- `wiki/pages/` — Wiki knowledge pages (Obsidian reads this directly)
-- `wiki/sources/inbox/` — New materials waiting to be digested
-- `wiki/sources/archived/` — Already digested materials
-- `engine/` — Core engine code (do not modify unless asked)
+- `wiki/MyWiki/` - formal wiki pages, organized by category
+- `wiki/candidates/` - candidate concepts not yet promoted into the formal graph
+- `wiki/index.md` - human-readable navigation index
+- `wiki/log.md` - operation history
+- `sources/inbox/` - new source material waiting for ingest
+- `sources/archived/` - archived source material after ingest
+- `web/pages/` and `web/data/` - generated WebUI outputs
 
-## After Knowledge Updates
+## Rules For Future AI Agents
 
-When wiki pages are updated, remind the user they can publish to the web:
+- Prefer updating an existing page over creating a duplicate.
+- Do not create many formal pages by default.
+- A conversation may produce candidate concepts without promoting them.
+- Only split a concept into standalone pages after the user clearly masters those sub-concepts.
+- Preserve category routing and category folder structure.
+- Rebuild web data after formal wiki changes.
 
-```bash
-git add wiki/pages/ && git commit -m "update wiki" && git push
+## Publishing Reminder
+
+After formal wiki pages change:
+
+```powershell
+node web\scripts\prepare.js
+git add wiki web
+git commit -m "update wiki"
+git push
 ```
-
-## Important
-
-- The wiki uses `[[double brackets]]` for cross-page links
-- Pages have YAML frontmatter (title, tags, related, evolution, etc.)
-- The engine uses LLM to extract, organize, and maintain knowledge automatically
-- Always prefer updating existing pages over creating duplicates
