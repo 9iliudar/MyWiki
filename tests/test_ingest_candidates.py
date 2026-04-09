@@ -104,8 +104,9 @@ def test_ingest_limits_mastered_pages_and_stores_candidates():
 
         assert result["pages_affected"] == ["Boundary-Design", "Permission-Boundary"]
         assert len(result["candidate_concepts"]) == 2
-        assert (candidates_dir / "topic.md").exists()
+        assert (candidates_dir / "AI" / "topic.md").exists()
         assert not (pages_dir / "Output-Boundary.md").exists()
+        assert (pages_dir / "AI" / "Boundary-Design.md").exists()
         assert len(vector_store.upserts) == 2
     finally:
         shutil.rmtree(workspace_tmp, ignore_errors=True)

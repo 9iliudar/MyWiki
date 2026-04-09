@@ -29,6 +29,7 @@ def _build_components(config: dict):
         log_path=config["wiki"]["log_path"],
         candidates_dir=config["wiki"].get("candidates_dir"),
     )
+    wiki.default_category = config["wiki"].get("default_category", "AI")
     return llm, embedder, vector_store, wiki
 
 
@@ -42,16 +43,17 @@ def cmd_ingest(args, config):
         max_auto_pages=config["ingest"].get("max_auto_pages", 2),
     )
     if args.file:
-        result = pipeline.ingest_file(args.file)
+        result = pipeline.ingest_file(args.file, category_override=args.category)
         print(f"已消化: {args.file}")
         print(f"摘要: {result['summary']}")
         print(f"影响页面: {', '.join(result['pages_affected'])}")
         print(f"候选概念: {len(result.get('candidate_concepts', []))}")
+        print(f"分类: {result.get('category', config['wiki'].get('default_category', 'AI'))}")
     else:
-        results = pipeline.ingest_inbox()
+        results = pipeline.ingest_inbox(category_override=args.category)
         print(f"已消化 {len(results)} 份素材")
         for r in results:
-            print(f"  - {r['summary'][:60]}... ({len(r['pages_affected'])} 页面, {len(r.get('candidate_concepts', []))} 候选概念)")
+            print(f"  - {r['summary'][:60]}... ({len(r['pages_affected'])} 页面, {len(r.get('candidate_concepts', []))} 候选概念, 分类 {r.get('category', config['wiki'].get('default_category', 'AI'))})")
 
 
 def cmd_query(args, config):
@@ -97,6 +99,7 @@ def main():
 
     ingest_parser = subparsers.add_parser("ingest", help="消化新素材")
     ingest_parser.add_argument("--file", help="指定素材文件路径（不指定则处理整个 inbox）")
+    ingest_parser.add_argument("--category", help="正式知识写入的分类目录，例如 AI / Finance / Literature")
 
     query_parser = subparsers.add_parser("query", help="查询知识库")
     query_parser.add_argument("question", help="问题")

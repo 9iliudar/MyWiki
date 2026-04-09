@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const WIKI_PAGES_DIR = path.resolve(__dirname, "../../wiki/pages");
+const WIKI_PAGES_DIR = path.resolve(__dirname, "../../wiki/MyWiki");
 const WEB_PAGES_DIR = path.resolve(__dirname, "../pages");
 const DATA_DIR = path.resolve(__dirname, "../data");
 
@@ -16,21 +16,51 @@ function ensureDir(dir) {
   }
 }
 
+function walkMarkdownFiles(dir, base = dir) {
+  const files = [];
+  if (!fs.existsSync(dir)) return files;
+
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith(".")) continue;
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...walkMarkdownFiles(fullPath, base));
+    } else if (entry.isFile() && entry.name.endsWith(".md")) {
+      files.push({
+        fullPath,
+        relativePath: path.relative(base, fullPath),
+      });
+    }
+  }
+  return files;
+}
+
+function routeFromSlug(slug) {
+  return `/pages/${slug}.html`;
+}
+
 function main() {
   ensureDir(WEB_PAGES_DIR);
   ensureDir(DATA_DIR);
 
-  const files = fs.readdirSync(WIKI_PAGES_DIR).filter(f => f.endsWith(".md"));
+  const files = walkMarkdownFiles(WIKI_PAGES_DIR);
   const allMeta = [];
 
   for (const file of files) {
-    const srcPath = path.join(WIKI_PAGES_DIR, file);
+    const srcPath = file.fullPath;
+    const relativePath = file.relativePath;
     const content = fs.readFileSync(srcPath, "utf-8");
     const { data } = matter(content);
-    const name = file.replace(/\.md$/, "");
+    const slug = relativePath.replace(/\\/g, "/").replace(/\.md$/, "");
+    const name = path.basename(relativePath, ".md");
+    const category = path.dirname(relativePath).replace(/\\/g, "/") || "General";
+    const route = routeFromSlug(slug);
 
     allMeta.push({
       name,
+      slug,
+      route,
+      category,
       title: data.title || name,
       tags: data.tags || [],
       related: data.related || [],
@@ -40,18 +70,17 @@ function main() {
       evolution: data.evolution || [],
     });
 
-    // Inject h1 title if not present in body
+    const targetPath = path.join(WEB_PAGES_DIR, `${slug}.md`);
+    ensureDir(path.dirname(targetPath));
+
     const bodyAfterFrontmatter = content.replace(/^---[\s\S]*?---\s*/, "");
     const hasH1 = /^#\s+/m.test(bodyAfterFrontmatter);
     if (!hasH1 && (data.title || name)) {
       const title = data.title || name;
-      const injected = content.replace(
-        /^(---[\s\S]*?---\s*)/,
-        `$1\n# ${title}\n\n`
-      );
-      fs.writeFileSync(path.join(WEB_PAGES_DIR, file), injected, "utf-8");
+      const injected = content.replace(/^(---[\s\S]*?---\s*)/, `$1\n# ${title}\n\n`);
+      fs.writeFileSync(targetPath, injected, "utf-8");
     } else {
-      fs.copyFileSync(srcPath, path.join(WEB_PAGES_DIR, file));
+      fs.copyFileSync(srcPath, targetPath);
     }
   }
 
@@ -61,14 +90,27 @@ function main() {
     "utf-8"
   );
 
-  const nameSet = new Set(allMeta.map(p => p.name));
-  // Map Chinese titles to file names for wikilink resolution
-  const titleToName = {};
-  for (const p of allMeta) {
-    titleToName[p.title] = p.name;
-    titleToName[p.name] = p.name;
+  const routeByName = {};
+  const routeByTitle = {};
+  for (const page of allMeta) {
+    routeByName[page.name] = page.route;
+    routeByTitle[page.title] = page.route;
   }
-  const nodes = allMeta.map(p => ({ id: p.name, title: p.title, tags: p.tags }));
+
+  fs.writeFileSync(
+    path.join(DATA_DIR, "route-map.json"),
+    JSON.stringify({ routeByName, routeByTitle }, null, 2),
+    "utf-8"
+  );
+
+  const nameSet = new Set(allMeta.map((p) => p.name));
+  const titleToName = {};
+  for (const page of allMeta) {
+    titleToName[page.title] = page.name;
+    titleToName[page.name] = page.name;
+  }
+
+  const nodes = allMeta.map((p) => ({ id: p.name, title: p.title, tags: p.tags, category: p.category }));
   const edgeSet = new Set();
   const edges = [];
 
@@ -81,13 +123,12 @@ function main() {
   }
 
   for (const page of allMeta) {
-    // From frontmatter related field
     for (const rel of page.related) {
       const target = rel.replace(/^\[\[/, "").replace(/\]\]$/, "");
       if (nameSet.has(target)) addEdge(page.name, target);
     }
-    // From body [[wikilinks]]
-    const srcPath = path.join(WIKI_PAGES_DIR, page.name + ".md");
+
+    const srcPath = path.join(WIKI_PAGES_DIR, page.slug + ".md");
     const body = fs.readFileSync(srcPath, "utf-8");
     const wikilinks = body.match(/\[\[([^\]]+)\]\]/g) || [];
     for (const link of wikilinks) {
@@ -103,7 +144,7 @@ function main() {
     "utf-8"
   );
 
-  console.log(`Prepared ${files.length} pages, ${edges.length} edges`);
+  console.log(`Prepared ${files.length} pages across ${new Set(allMeta.map((p) => p.category)).size} categories`);
 }
 
 main();

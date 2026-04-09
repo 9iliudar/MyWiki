@@ -10,22 +10,33 @@ class WikiIO:
         self.index_path = Path(index_path)
         self.log_path = Path(log_path)
         self.candidates_dir = Path(candidates_dir) if candidates_dir else None
+        self.default_category = "AI"
 
-    def write_page(self, name: str, fm: dict, content: str):
-        path = self.pages_dir / f"{name}.md"
+    def write_page(self, name: str, fm: dict, content: str, category: str | None = None):
+        existing_path = self.get_page_path(name)
+        page_category = self.normalize_category(
+            category or fm.get("category") or (existing_path.parent.relative_to(self.pages_dir).as_posix() if existing_path else self.default_category)
+        )
+        path = self.pages_dir / page_category / f"{name}.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        fm["category"] = page_category
         post = frontmatter.Post(content, **fm)
         path.write_text(frontmatter.dumps(post), encoding="utf-8")
 
     def read_page(self, name: str) -> dict:
-        path = self.pages_dir / f"{name}.md"
+        path = self.get_page_path(name)
+        if path is None:
+            raise FileNotFoundError(f"Page not found: {name}")
         post = frontmatter.load(str(path))
-        return {"name": name, "frontmatter": dict(post.metadata), "content": post.content}
+        metadata = dict(post.metadata)
+        metadata.setdefault("category", path.parent.relative_to(self.pages_dir).as_posix())
+        return {"name": name, "frontmatter": metadata, "content": post.content, "path": str(path)}
 
     def page_exists(self, name: str) -> bool:
-        return (self.pages_dir / f"{name}.md").exists()
+        return self.get_page_path(name) is not None
 
     def list_pages(self) -> list[str]:
-        return [p.stem for p in self.pages_dir.glob("*.md")]
+        return sorted(p.stem for p in self.pages_dir.rglob("*.md"))
 
     def read_all_pages(self) -> list[dict]:
         return [self.read_page(name) for name in self.list_pages()]
@@ -42,13 +53,22 @@ class WikiIO:
     def read_log(self) -> str:
         return self.log_path.read_text(encoding="utf-8")
 
-    def write_candidate_snapshot(self, source_name: str, summary: str, mastered_pages: list[str], candidates: list[dict]):
+    def write_candidate_snapshot(
+        self,
+        source_name: str,
+        summary: str,
+        mastered_pages: list[str],
+        candidates: list[dict],
+        category: str | None = None,
+    ):
         if not self.candidates_dir:
             return
 
-        self.candidates_dir.mkdir(parents=True, exist_ok=True)
+        candidate_category = self.normalize_category(category or self.default_category)
+        target_dir = self.candidates_dir / candidate_category
+        target_dir.mkdir(parents=True, exist_ok=True)
         snapshot_name = Path(source_name).stem
-        snapshot_path = self.candidates_dir / f"{snapshot_name}.md"
+        snapshot_path = target_dir / f"{snapshot_name}.md"
         created = datetime.now().strftime("%Y-%m-%d %H:%M")
         frontmatter_data = {
             "source": source_name,
@@ -56,6 +76,7 @@ class WikiIO:
             "mastered_pages": mastered_pages,
             "candidate_count": len(candidates),
             "status": "pending_review",
+            "category": candidate_category,
         }
 
         lines = ["# 候选概念", "", f"摘要：{summary}", ""]
@@ -89,6 +110,8 @@ class WikiIO:
         page = self.read_page(name)
         fm = page["frontmatter"]
         lines = [f"# {fm.get('title', name)}", ""]
+        if fm.get("category"):
+            lines.append(f"分类: {fm['category']}")
         if fm.get("tags"):
             lines.append(f"标签: {', '.join(fm['tags'])}")
         if fm.get("related"):
@@ -96,3 +119,15 @@ class WikiIO:
         lines.append("")
         lines.append(page["content"])
         return "\n".join(lines)
+
+    def get_page_path(self, name: str) -> Path | None:
+        direct = self.pages_dir / f"{name}.md"
+        if direct.exists():
+            return direct
+        matches = list(self.pages_dir.rglob(f"{name}.md"))
+        return matches[0] if matches else None
+
+    @staticmethod
+    def normalize_category(category: str | None) -> str:
+        value = (category or "").strip().strip("/\\")
+        return value or "AI"

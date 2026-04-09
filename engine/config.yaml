@@ -13,11 +13,12 @@ qdrant:
   path: ./vectors
 
 wiki:
-  pages_dir: ./wiki/MyWiki/Ai
+  pages_dir: ./wiki/MyWiki
   index_path: ./wiki/index.md
   log_path: ./wiki/log.md
   schema_path: ./schema.md
   candidates_dir: ./wiki/candidates
+  default_category: AI
 
 sources:
   inbox_dir: ./sources/inbox

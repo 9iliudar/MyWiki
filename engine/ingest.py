@@ -35,9 +35,13 @@ class IngestPipeline:
         self.archive_dir = Path(archive_dir)
         self.max_auto_pages = max(1, max_auto_pages)
 
-    def ingest_file(self, source_path: str) -> dict:
+    def ingest_file(self, source_path: str, category_override: str | None = None) -> dict:
         source_path = Path(source_path)
         source_content = source_path.read_text(encoding="utf-8")
+        source_post = frontmatter.load(str(source_path))
+        source_category = self.wiki.normalize_category(
+            category_override or source_post.metadata.get("category") or self.wiki.default_category
+        )
         existing_pages = ", ".join(self.wiki.list_pages()) or "（暂无页面）"
 
         schema_short = self.schema[:800] if len(self.schema) > 800 else self.schema
@@ -70,6 +74,7 @@ class IngestPipeline:
                 "sources": [f"sources/archived/{source_path.name}"],
                 "related": page_data.get("related", []),
                 "tags": page_data.get("tags", []),
+                "category": source_category,
                 "evolution": [f"{today}: {'初始创建' if page_data.get('is_new', True) else '更新内容'}"],
             }
 
@@ -81,7 +86,7 @@ class IngestPipeline:
                 fm["tags"] = list(set(existing["frontmatter"].get("tags", []) + fm["tags"]))
                 fm["evolution"] = existing["frontmatter"].get("evolution", []) + fm["evolution"]
 
-            self.wiki.write_page(name, fm, page_data["content"])
+            self.wiki.write_page(name, fm, page_data["content"], category=source_category)
             pages_affected.append(name)
 
             full_text = self.wiki.get_page_full_text(name)
@@ -100,6 +105,7 @@ class IngestPipeline:
                 summary=response.get("summary", ""),
                 mastered_pages=pages_affected,
                 candidates=candidate_concepts,
+                category=source_category,
             )
 
         self.wiki.append_log(
@@ -114,12 +120,13 @@ class IngestPipeline:
             "summary": response.get("summary", ""),
             "pages_affected": pages_affected,
             "candidate_concepts": candidate_concepts,
+            "category": source_category,
         }
 
-    def ingest_inbox(self) -> list[dict]:
+    def ingest_inbox(self, category_override: str | None = None) -> list[dict]:
         results = []
         for source_file in sorted(self.inbox_dir.glob("*.md")):
-            results.append(self.ingest_file(str(source_file)))
+            results.append(self.ingest_file(str(source_file), category_override=category_override))
         return results
 
     def _archive_source(self, source_path: Path):

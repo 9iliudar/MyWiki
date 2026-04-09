@@ -8,10 +8,11 @@ class MockLLM:
     def complete(self, prompt, context=""):
         return json.dumps({
             "summary": "测试摘要",
-            "pages": [
-                {"name": "Test-Page", "title": "测试页面", "tags": [], "related": [],
-                 "content": "测试内容。", "is_new": True}
+            "mastered_pages": [
+                {"name": "Test-Page", "title": "测试页面", "tags": ["AI"], "related": ["[[Reference-Page]]"],
+                 "content": "测试内容。" * 50, "is_new": True}
             ],
+            "candidate_concepts": [],
             "index_updates": "",
         })
 

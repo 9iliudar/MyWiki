@@ -40,10 +40,11 @@ def _get_components():
             log_path=config["wiki"]["log_path"],
             candidates_dir=config["wiki"].get("candidates_dir"),
         )
+        _components["wiki"].default_category = config["wiki"].get("default_category", "AI")
     return _components
 
 
-def handle_ingest(content: str, title: str = "", llm=None, embedder=None, vector_store=None, wiki_env: dict = None) -> str:
+def handle_ingest(content: str, title: str = "", category: str = "", llm=None, embedder=None, vector_store=None, wiki_env: dict = None) -> str:
     if wiki_env:
         wiki = WikiIO(
             wiki_env["pages_dir"],
@@ -51,6 +52,7 @@ def handle_ingest(content: str, title: str = "", llm=None, embedder=None, vector
             wiki_env["log_path"],
             wiki_env.get("candidates_dir"),
         )
+        wiki.default_category = wiki_env.get("default_category", "AI")
         pipeline = IngestPipeline(
             llm=llm, embedder=embedder, vector_store=vector_store, wiki=wiki,
             schema_path=wiki_env["schema_path"],
@@ -75,17 +77,18 @@ def handle_ingest(content: str, title: str = "", llm=None, embedder=None, vector
 
     if not title:
         title = f"conversation-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+    resolved_category = category or wiki.default_category
 
     source_file = inbox_dir / f"{title}.md"
     source_file.write_text(
-        f"---\ntitle: {title}\ndate_added: {datetime.now().strftime('%Y-%m-%d')}\ntype: conversation\nstatus: raw\n---\n\n{content}",
+        f"---\ntitle: {title}\ndate_added: {datetime.now().strftime('%Y-%m-%d')}\ntype: conversation\ncategory: {resolved_category}\nstatus: raw\n---\n\n{content}",
         encoding="utf-8",
     )
 
-    result = pipeline.ingest_file(str(source_file))
+    result = pipeline.ingest_file(str(source_file), category_override=resolved_category)
     pages = ", ".join(result["pages_affected"])
     candidate_count = len(result.get("candidate_concepts", []))
-    return f"已消化，更新了 {len(result['pages_affected'])} 个页面：{pages}\n候选概念：{candidate_count}\n摘要：{result['summary']}"
+    return f"已消化，更新了 {len(result['pages_affected'])} 个页面：{pages}\n分类：{result.get('category', resolved_category)}\n候选概念：{candidate_count}\n摘要：{result['summary']}"
 
 
 def handle_query(question: str, llm=None, embedder=None, vector_store=None, wiki_env: dict = None) -> str:
@@ -121,14 +124,15 @@ def handle_lint(llm=None, embedder=None, vector_store=None, wiki_env: dict = Non
 
 
 @mcp.tool()
-def wiki_ingest(content: str, title: str = "") -> str:
+def wiki_ingest(content: str, title: str = "", category: str = "") -> str:
     """消化新知识到 Wiki。当对话中出现值得记录的新知识、概念或见解时调用此工具。
 
     Args:
         content: 要消化的知识内容（文本）
         title: 来源标题（可选，默认自动生成）
+        category: 目标分类目录（如 AI、Finance、Literature）
     """
-    return handle_ingest(content, title)
+    return handle_ingest(content, title, category)
 
 
 @mcp.tool()

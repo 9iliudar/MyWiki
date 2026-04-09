@@ -50,3 +50,11 @@ def test_read_all_pages(wiki):
     assert len(all_pages) == 2
     titles = {p["frontmatter"]["title"] for p in all_pages}
     assert titles == {"X", "Y"}
+
+
+def test_write_page_in_category(wiki):
+    fm = {"title": "Finance Note", "created": "2026-04-07", "updated": "2026-04-07", "sources": [], "related": [], "tags": [], "evolution": []}
+    wiki.write_page("Finance-Note", fm, "Content", category="Finance")
+    page = wiki.read_page("Finance-Note")
+    assert page["frontmatter"]["category"] == "Finance"
+    assert "Finance" in page["path"]

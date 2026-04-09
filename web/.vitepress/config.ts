@@ -1,4 +1,15 @@
+import fs from "fs";
+import path from "path";
 import { defineConfig } from "vitepress";
+
+const routeMapPath = path.resolve(__dirname, "../data/route-map.json");
+
+function loadRouteMap() {
+  if (!fs.existsSync(routeMapPath)) {
+    return { routeByName: {}, routeByTitle: {} };
+  }
+  return JSON.parse(fs.readFileSync(routeMapPath, "utf-8"));
+}
 
 export default defineConfig({
   title: "MyWiki",
@@ -23,7 +34,6 @@ export default defineConfig({
   },
 
   transformPageData(pageData) {
-    // Auto-set h1 title for wiki pages from frontmatter
     if (pageData.relativePath.startsWith("pages/") && pageData.frontmatter.title) {
       pageData.title = pageData.frontmatter.title;
     }
@@ -35,14 +45,17 @@ export default defineConfig({
       const defaultRender = md.renderer.rules.text || ((tokens, idx) => tokens[idx].content);
       md.renderer.rules.text = (tokens, idx, options, env, self) => {
         const content = tokens[idx].content;
-        if (wikilinkRe.test(content)) {
-          wikilinkRe.lastIndex = 0;
-          return content.replace(wikilinkRe, (_, pageName) => {
-            const slug = pageName.trim();
-            return `<a href="/pages/${slug}.html">${slug}</a>`;
-          });
+        if (!wikilinkRe.test(content)) {
+          return defaultRender(tokens, idx, options, env, self);
         }
-        return defaultRender(tokens, idx, options, env, self);
+
+        wikilinkRe.lastIndex = 0;
+        const routeMap = loadRouteMap();
+        return content.replace(wikilinkRe, (_, pageName) => {
+          const slug = pageName.trim();
+          const href = routeMap.routeByName[slug] || routeMap.routeByTitle[slug] || `/pages/${slug}.html`;
+          return `<a href="${href}">${slug}</a>`;
+        });
       };
     },
   },

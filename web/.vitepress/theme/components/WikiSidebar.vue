@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useData } from "vitepress";
+import routeMap from "../../../data/route-map.json";
 
 const { frontmatter } = useData();
 
@@ -8,17 +9,27 @@ const related = computed(() => {
   const list = frontmatter.value.related || [];
   return list.map((r: string) => {
     const name = r.replace(/^\[\[/, "").replace(/\]\]$/, "");
-    return { name, href: `/pages/${name}.html` };
+    const href =
+      (routeMap as any).routeByName?.[name] ||
+      (routeMap as any).routeByTitle?.[name] ||
+      `/pages/${name}.html`;
+    return { name, href };
   });
 });
 
 const sources = computed(() => frontmatter.value.sources || []);
 const tags = computed(() => frontmatter.value.tags || []);
 const evolution = computed(() => (frontmatter.value.evolution || []).slice().reverse());
+const category = computed(() => frontmatter.value.category || "");
 </script>
 
 <template>
   <aside class="wiki-sidebar" v-if="frontmatter.title">
+    <section v-if="category">
+      <h4>分类</h4>
+      <div class="category-chip">{{ category }}</div>
+    </section>
+
     <section v-if="tags.length">
       <h4>标签</h4>
       <div class="tags">
@@ -78,17 +89,18 @@ const evolution = computed(() => (frontmatter.value.evolution || []).slice().rev
 .wiki-sidebar a:hover {
   color: var(--vp-c-brand-1);
 }
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
+.category-chip,
 .tag {
   background: var(--vp-c-bg-soft);
   padding: 0.15rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
   color: var(--vp-c-text-2);
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 .source {
   color: var(--vp-c-text-3);
