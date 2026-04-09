@@ -34,7 +34,7 @@ const { frontmatter, page } = useData();
 
 /* Make doc area full width so centering works */
 .VPDoc.has-aside {
-  padding: 0 32px !important;
+  padding: 24px 32px 0 !important;
 }
 
 /* Keep aside (outline + WikiSidebar) but position it relative to centered content */
