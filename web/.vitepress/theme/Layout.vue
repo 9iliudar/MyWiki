@@ -16,18 +16,31 @@ const { frontmatter, page } = useData();
 </template>
 
 <style>
-/* Center wiki page content */
-.VPDoc .container {
-  max-width: 100% !important;
-  display: flex !important;
-  justify-content: center !important;
-}
-.VPDoc .content-container {
+/* Center wiki detail page content */
+.VPDoc.has-aside .container {
   max-width: 784px !important;
   margin: 0 auto !important;
+  justify-content: center !important;
 }
-/* Hide empty sidebar space on wiki pages to allow true centering */
-.VPContent.has-sidebar .VPDoc {
+
+/* Override sidebar-induced left offset */
+.VPContent.has-sidebar {
   padding-left: 0 !important;
+}
+
+.VPSidebar {
+  display: none !important;
+}
+
+/* Make doc area full width so centering works */
+.VPDoc.has-aside {
+  padding: 0 32px !important;
+}
+
+/* Keep aside (outline + WikiSidebar) but position it relative to centered content */
+.VPDoc.has-aside .container {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 2rem;
 }
 </style>
