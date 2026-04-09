@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import routeMap from "../../../data/route-map.json";
 
 interface PageMeta {
   name: string;
@@ -8,6 +9,7 @@ interface PageMeta {
   updated: string;
   tags: string[];
   evolution: string[];
+  route?: string;
 }
 
 const pages = ref<PageMeta[]>([]);
@@ -49,6 +51,15 @@ const groupedByDate = computed(() => {
   }
   return groups;
 });
+
+function routeForPage(page: PageMeta) {
+  return (
+    page.route ||
+    (routeMap as any).routeByName?.[page.name] ||
+    (routeMap as any).routeByTitle?.[page.title] ||
+    `/pages/${page.name}.html`
+  );
+}
 </script>
 
 <template>
@@ -70,7 +81,7 @@ const groupedByDate = computed(() => {
         >
           <div class="item-dot"></div>
           <div class="item-content">
-            <a :href="`/pages/${page.name}.html`" class="page-title">
+            <a :href="routeForPage(page)" class="page-title">
               {{ page.title }}
             </a>
             <div v-if="page.tags && page.tags.length" class="item-tags">

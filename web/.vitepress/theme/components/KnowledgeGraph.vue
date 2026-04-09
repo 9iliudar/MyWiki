@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import * as d3 from "d3";
+import routeMap from "../../../data/route-map.json";
 
 interface GraphNode extends d3.SimulationNodeDatum {
   id: string;
@@ -16,6 +17,14 @@ interface GraphEdge {
 const container = ref<HTMLDivElement | null>(null);
 let simulation: d3.Simulation<GraphNode, GraphEdge> | null = null;
 let resizeObserver: ResizeObserver | null = null;
+
+function routeForNode(node: GraphNode) {
+  return (
+    (routeMap as any).routeByName?.[node.id] ||
+    (routeMap as any).routeByTitle?.[node.title] ||
+    `/pages/${node.id}.html`
+  );
+}
 
 onMounted(async () => {
   if (!container.value) return;
@@ -112,7 +121,7 @@ onMounted(async () => {
     .attr("filter", "url(#node-glow)")
     .attr("cursor", "pointer")
     .on("click", (_, d) => {
-      window.location.href = `/pages/${d.id}.html`;
+      window.location.href = routeForNode(d);
     })
     .on("mouseenter", (_, d) => {
       // Highlight connected edges
