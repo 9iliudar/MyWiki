@@ -44,9 +44,10 @@ const { frontmatter, page } = useData();
   gap: 2rem;
 }
 
-/* Add breathing room above the detail page title */
+/* Keep the detail page title vertically balanced */
 .VPDoc.has-aside .vp-doc > h1:first-child,
 .VPDoc.has-aside .vp-doc > div > h1:first-child {
-  margin-top: 20px !important;
+  margin-top: 32px !important;
+  margin-bottom: 32px !important;
 }
 </style>
