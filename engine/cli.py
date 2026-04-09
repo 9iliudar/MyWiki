@@ -27,6 +27,7 @@ def _build_components(config: dict):
         pages_dir=config["wiki"]["pages_dir"],
         index_path=config["wiki"]["index_path"],
         log_path=config["wiki"]["log_path"],
+        candidates_dir=config["wiki"].get("candidates_dir"),
     )
     return llm, embedder, vector_store, wiki
 
@@ -38,17 +39,19 @@ def cmd_ingest(args, config):
         schema_path=config["wiki"]["schema_path"],
         inbox_dir=config["sources"]["inbox_dir"],
         archive_dir=config["sources"]["archive_dir"],
+        max_auto_pages=config["ingest"].get("max_auto_pages", 2),
     )
     if args.file:
         result = pipeline.ingest_file(args.file)
         print(f"已消化: {args.file}")
         print(f"摘要: {result['summary']}")
         print(f"影响页面: {', '.join(result['pages_affected'])}")
+        print(f"候选概念: {len(result.get('candidate_concepts', []))}")
     else:
         results = pipeline.ingest_inbox()
         print(f"已消化 {len(results)} 份素材")
         for r in results:
-            print(f"  - {r['summary'][:60]}... ({len(r['pages_affected'])} 页面)")
+            print(f"  - {r['summary'][:60]}... ({len(r['pages_affected'])} 页面, {len(r.get('candidate_concepts', []))} 候选概念)")
 
 
 def cmd_query(args, config):
@@ -82,6 +85,7 @@ def cmd_watch(args, config):
         schema_path=config["wiki"]["schema_path"],
         inbox_dir=config["sources"]["inbox_dir"],
         archive_dir=config["sources"]["archive_dir"],
+        max_auto_pages=config["ingest"].get("max_auto_pages", 2),
     )
     start_watching(config["sources"]["inbox_dir"], pipeline)
 

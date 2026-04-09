@@ -2,7 +2,12 @@
 created: '2026-04-09'
 evolution:
 - '2026-04-09: 初始创建'
-related: []
+related:
+- '[[Harness-Engineering]]'
+- '[[Ingest-Operation]]'
+- '[[Lint-Operation]]'
+- '[[MCP]]'
+- '[[Schema-Layer]]'
 sources:
 - sources/archived/2026-04-09_harness-engineering.md
 tags: []

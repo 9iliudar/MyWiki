@@ -38,18 +38,25 @@ def _get_components():
             pages_dir=config["wiki"]["pages_dir"],
             index_path=config["wiki"]["index_path"],
             log_path=config["wiki"]["log_path"],
+            candidates_dir=config["wiki"].get("candidates_dir"),
         )
     return _components
 
 
 def handle_ingest(content: str, title: str = "", llm=None, embedder=None, vector_store=None, wiki_env: dict = None) -> str:
     if wiki_env:
-        wiki = WikiIO(wiki_env["pages_dir"], wiki_env["index_path"], wiki_env["log_path"])
+        wiki = WikiIO(
+            wiki_env["pages_dir"],
+            wiki_env["index_path"],
+            wiki_env["log_path"],
+            wiki_env.get("candidates_dir"),
+        )
         pipeline = IngestPipeline(
             llm=llm, embedder=embedder, vector_store=vector_store, wiki=wiki,
             schema_path=wiki_env["schema_path"],
             inbox_dir=wiki_env["inbox_dir"],
             archive_dir=wiki_env["archive_dir"],
+            max_auto_pages=wiki_env.get("max_auto_pages", 2),
         )
         inbox_dir = Path(wiki_env["inbox_dir"])
     else:
@@ -62,6 +69,7 @@ def handle_ingest(content: str, title: str = "", llm=None, embedder=None, vector
             schema_path=config["wiki"]["schema_path"],
             inbox_dir=config["sources"]["inbox_dir"],
             archive_dir=config["sources"]["archive_dir"],
+            max_auto_pages=config["ingest"].get("max_auto_pages", 2),
         )
         inbox_dir = Path(config["sources"]["inbox_dir"])
 
@@ -76,7 +84,8 @@ def handle_ingest(content: str, title: str = "", llm=None, embedder=None, vector
 
     result = pipeline.ingest_file(str(source_file))
     pages = ", ".join(result["pages_affected"])
-    return f"已消化，更新了 {len(result['pages_affected'])} 个页面：{pages}\n摘要：{result['summary']}"
+    candidate_count = len(result.get("candidate_concepts", []))
+    return f"已消化，更新了 {len(result['pages_affected'])} 个页面：{pages}\n候选概念：{candidate_count}\n摘要：{result['summary']}"
 
 
 def handle_query(question: str, llm=None, embedder=None, vector_store=None, wiki_env: dict = None) -> str:

@@ -2,7 +2,11 @@
 created: '2026-04-08'
 evolution:
 - '2026-04-08: 初始创建'
-related: []
+related:
+- '[[LLM-Wiki]]'
+- '[[Raw-Sources-Layer]]'
+- '[[Schema-Layer]]'
+- '[[Wiki-Layer]]'
 sources:
 - sources/archived/2026-04-07_karpathy-llm-wiki.md
 tags: []

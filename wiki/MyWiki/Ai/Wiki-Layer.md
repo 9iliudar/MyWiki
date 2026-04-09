@@ -2,7 +2,12 @@
 created: '2026-04-08'
 evolution:
 - '2026-04-08: 初始创建'
-related: []
+related:
+- '[[Ingest-Operation]]'
+- '[[Lint-Operation]]'
+- '[[Markdown]]'
+- '[[Query-Operation]]'
+- '[[Three-Layer-Architecture]]'
 sources:
 - sources/archived/2026-04-07_karpathy-llm-wiki.md
 tags: []

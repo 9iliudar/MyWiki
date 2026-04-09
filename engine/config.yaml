@@ -13,10 +13,11 @@ qdrant:
   path: ./vectors
 
 wiki:
-  pages_dir: ./wiki/pages
+  pages_dir: ./wiki/MyWiki/Ai
   index_path: ./wiki/index.md
   log_path: ./wiki/log.md
   schema_path: ./schema.md
+  candidates_dir: ./wiki/candidates
 
 sources:
   inbox_dir: ./sources/inbox
@@ -24,6 +25,7 @@ sources:
 
 ingest:
   batch_interval_minutes: 60
+  max_auto_pages: 2
 
 lint:
   schedule: daily
