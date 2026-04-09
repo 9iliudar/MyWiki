@@ -19,9 +19,15 @@ const { frontmatter, page } = useData();
 /* Center wiki page content */
 .VPDoc .container {
   max-width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
 }
 .VPDoc .content-container {
   max-width: 784px !important;
   margin: 0 auto !important;
+}
+/* Hide empty sidebar space on wiki pages to allow true centering */
+.VPContent.has-sidebar .VPDoc {
+  padding-left: 0 !important;
 }
 </style>
