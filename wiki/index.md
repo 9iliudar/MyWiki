@@ -6,4 +6,7 @@
 
 ### 开发方法论
 - [[SDD]]（Spec-Driven Development）
+- [[Spec]]
+- [[Schema]]
+- [[Prompt]]
 - [[Spec-Schema-Prompt 三层模型]]
