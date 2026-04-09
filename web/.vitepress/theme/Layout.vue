@@ -43,4 +43,10 @@ const { frontmatter, page } = useData();
   justify-content: center !important;
   gap: 2rem;
 }
+
+/* Add breathing room above the detail page title */
+.VPDoc.has-aside .vp-doc > h1:first-child,
+.VPDoc.has-aside .vp-doc > div > h1:first-child {
+  margin-top: 20px !important;
+}
 </style>
