@@ -1,6 +1,5 @@
-import argparse
+﻿import argparse
 import sys
-from pathlib import Path
 
 from engine.config import load_config
 from engine.llm import create_llm_provider
@@ -9,6 +8,15 @@ from engine.wiki_io import WikiIO
 from engine.ingest import IngestPipeline
 from engine.query import QueryPipeline
 from engine.lint import LintPipeline
+
+
+def _safe_print(message: str):
+    try:
+        print(message)
+    except UnicodeEncodeError:
+        encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
+        fallback = message.encode(encoding, errors="replace").decode(encoding, errors="replace")
+        print(fallback)
 
 
 def _build_components(config: dict):
@@ -36,7 +44,10 @@ def _build_components(config: dict):
 def cmd_ingest(args, config):
     llm, embedder, vector_store, wiki = _build_components(config)
     pipeline = IngestPipeline(
-        llm=llm, embedder=embedder, vector_store=vector_store, wiki=wiki,
+        llm=llm,
+        embedder=embedder,
+        vector_store=vector_store,
+        wiki=wiki,
         schema_path=config["wiki"]["schema_path"],
         inbox_dir=config["sources"]["inbox_dir"],
         archive_dir=config["sources"]["archive_dir"],
@@ -44,46 +55,55 @@ def cmd_ingest(args, config):
     )
     if args.file:
         result = pipeline.ingest_file(args.file, category_override=args.category)
-        print(f"已消化: {args.file}")
-        print(f"摘要: {result['summary']}")
-        print(f"影响页面: {', '.join(result['pages_affected'])}")
-        print(f"候选概念: {len(result.get('candidate_concepts', []))}")
-        print(f"分类: {result.get('category', config['wiki'].get('default_category', 'AI'))}")
+        _safe_print(f"已消化: {args.file}")
+        _safe_print(f"摘要: {result['summary']}")
+        _safe_print(f"影响页面: {', '.join(result['pages_affected'])}")
+        _safe_print(f"候选概念: {len(result.get('candidate_concepts', []))}")
+        _safe_print(f"分类: {result.get('category', config['wiki'].get('default_category', 'AI'))}")
     else:
         results = pipeline.ingest_inbox(category_override=args.category)
-        print(f"已消化 {len(results)} 份素材")
-        for r in results:
-            print(f"  - {r['summary'][:60]}... ({len(r['pages_affected'])} 页面, {len(r.get('candidate_concepts', []))} 候选概念, 分类 {r.get('category', config['wiki'].get('default_category', 'AI'))})")
+        _safe_print(f"已消化 {len(results)} 份素材")
+        for result in results:
+            _safe_print(
+                f"  - {result['summary'][:60]}... "
+                f"({len(result['pages_affected'])} 页面, "
+                f"{len(result.get('candidate_concepts', []))} 候选概念, "
+                f"分类 {result.get('category', config['wiki'].get('default_category', 'AI'))})"
+            )
 
 
 def cmd_query(args, config):
     llm, embedder, vector_store, wiki = _build_components(config)
     pipeline = QueryPipeline(llm=llm, embedder=embedder, vector_store=vector_store, wiki=wiki)
     result = pipeline.query(args.question)
-    print(f"\n{result['answer']}\n")
+    _safe_print(f"\n{result['answer']}\n")
     if result["saved_page"]:
-        print(f"[已保存新页面: {result['saved_page']}]")
+        _safe_print(f"[已保存新页面: {result['saved_page']}]")
     if result["sources"]:
-        print(f"[参考页面: {', '.join(result['sources'])}]")
+        _safe_print(f"[参考页面: {', '.join(result['sources'])}]")
 
 
 def cmd_lint(args, config):
     llm, embedder, vector_store, wiki = _build_components(config)
     pipeline = LintPipeline(llm=llm, embedder=embedder, vector_store=vector_store, wiki=wiki)
     result = pipeline.run()
-    print(f"发现 {len(result['findings'])} 个问题")
-    for f in result["findings"]:
-        print(f"  [{f['type']}] {f['description']}")
-    print(f"已应用 {result['fixes_applied']} 个修正")
+    _safe_print(f"发现 {len(result['findings'])} 个问题")
+    for finding in result["findings"]:
+        _safe_print(f"  [{finding['type']}] {finding['description']}")
+    _safe_print(f"已应用 {result['fixes_applied']} 个修复")
 
 
 def cmd_watch(args, config):
     from engine.watch import start_watching
-    print(f"开始监听 {config['sources']['inbox_dir']}...")
-    print("按 Ctrl+C 停止")
+
+    _safe_print(f"开始监听 {config['sources']['inbox_dir']}...")
+    _safe_print("按 Ctrl+C 停止")
     llm, embedder, vector_store, wiki = _build_components(config)
     pipeline = IngestPipeline(
-        llm=llm, embedder=embedder, vector_store=vector_store, wiki=wiki,
+        llm=llm,
+        embedder=embedder,
+        vector_store=vector_store,
+        wiki=wiki,
         schema_path=config["wiki"]["schema_path"],
         inbox_dir=config["sources"]["inbox_dir"],
         archive_dir=config["sources"]["archive_dir"],
@@ -98,7 +118,7 @@ def main():
     subparsers = parser.add_subparsers(dest="command")
 
     ingest_parser = subparsers.add_parser("ingest", help="消化新素材")
-    ingest_parser.add_argument("--file", help="指定素材文件路径（不指定则处理整个 inbox）")
+    ingest_parser.add_argument("--file", help="指定素材文件路径；不指定则处理整个 inbox")
     ingest_parser.add_argument("--category", help="正式知识写入的分类目录，例如 AI / Finance / Literature")
 
     query_parser = subparsers.add_parser("query", help="查询知识库")
@@ -113,7 +133,12 @@ def main():
         sys.exit(1)
 
     config = load_config(args.config)
-    commands = {"ingest": cmd_ingest, "query": cmd_query, "lint": cmd_lint, "watch": cmd_watch}
+    commands = {
+        "ingest": cmd_ingest,
+        "query": cmd_query,
+        "lint": cmd_lint,
+        "watch": cmd_watch,
+    }
     commands[args.command](args, config)
 
 
