@@ -42,7 +42,15 @@ const { page } = useData();
 .VPDoc.has-aside .container {
   display: flex !important;
   justify-content: center !important;
-  gap: 72px !important;
+  gap: 88px !important;
+}
+
+.VPDoc.has-aside .content {
+  max-width: 652px !important;
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: 652px !important;
 }
 
 .wiki-detail-rail {
