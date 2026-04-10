@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { stripIpaFromTitle } from "../utils/displayTitle";
 
 interface PageMeta {
   name: string;
@@ -151,7 +152,7 @@ function triggerSearch() {
           :href="page.route"
           class="card"
         >
-          <div class="card-title">{{ page.title }}</div>
+          <div class="card-title">{{ stripIpaFromTitle(page.title) }}</div>
           <div class="card-meta">{{ page.category }}</div>
           <div v-if="page.tags.length" class="card-tags">
             <span v-for="tag in page.tags.slice(0, 3)" :key="tag" class="card-tag">{{ tag }}</span>

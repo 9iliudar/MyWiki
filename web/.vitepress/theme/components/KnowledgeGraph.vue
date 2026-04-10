@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import * as d3 from "d3";
 import routeMap from "../../../data/route-map.json";
+import { stripIpaFromTitle } from "../utils/displayTitle";
 
 interface GraphNode extends d3.SimulationNodeDatum {
   id: string;
@@ -176,7 +177,7 @@ onMounted(async () => {
     .selectAll("text")
     .data(graphData.nodes)
     .join("text")
-    .text((d) => d.title)
+    .text((d) => stripIpaFromTitle(d.title))
     .attr("font-size", "13px")
     .attr("font-family", "system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif")
     .attr("dx", 10)

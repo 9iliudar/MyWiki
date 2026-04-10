@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import routeMap from "../../../data/route-map.json";
+import { stripIpaFromTitle } from "../utils/displayTitle";
 
 interface PageMeta {
   name: string;
@@ -82,7 +83,7 @@ function routeForPage(page: PageMeta) {
           <div class="item-dot"></div>
           <div class="item-content">
             <a :href="routeForPage(page)" class="page-title">
-              {{ page.title }}
+              {{ stripIpaFromTitle(page.title) }}
             </a>
             <div v-if="page.tags && page.tags.length" class="item-tags">
               <span v-for="tag in page.tags.slice(0, 4)" :key="tag" class="item-tag">
