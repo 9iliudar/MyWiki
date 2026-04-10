@@ -4,15 +4,15 @@ import WikiSidebar from "./components/WikiSidebar.vue";
 import { useData } from "vitepress";
 
 const { Layout } = DefaultTheme;
-const { frontmatter, page } = useData();
+const { page } = useData();
 </script>
 
 <template>
-  <Layout>
-    <template #aside-outline-after>
-      <WikiSidebar v-if="page.relativePath.startsWith('pages/')" />
-    </template>
-  </Layout>
+  <Layout />
+  <WikiSidebar
+    v-if="page.relativePath.startsWith('pages/')"
+    class="wiki-detail-rail"
+  />
 </template>
 
 <style>
@@ -28,7 +28,8 @@ const { frontmatter, page } = useData();
   padding-left: 0 !important;
 }
 
-.VPSidebar {
+.VPSidebar,
+.VPDoc .aside {
   display: none !important;
 }
 
@@ -37,23 +38,26 @@ const { frontmatter, page } = useData();
   padding: 24px 32px 0 !important;
 }
 
-/* Keep aside (outline + WikiSidebar) but position it relative to centered content */
+/* Keep centered content width stable */
 .VPDoc.has-aside .container {
   display: flex !important;
   justify-content: center !important;
-  gap: 2rem;
+}
+
+.wiki-detail-rail {
+  display: none;
 }
 
 @media (min-width: 960px) {
-  .VPDoc .aside {
-    display: block !important;
-    width: 280px !important;
-    max-width: 280px !important;
-    padding-left: 32px !important;
-  }
-
-  .VPDoc .aside-container {
-    width: 248px !important;
+  .wiki-detail-rail {
+    position: fixed;
+    top: calc(var(--vp-nav-height, 64px) + 32px);
+    right: max(24px, calc((100vw - 1180px) / 2));
+    display: block;
+    width: 248px;
+    max-height: calc(100vh - var(--vp-nav-height, 64px) - 48px);
+    overflow-y: auto;
+    z-index: 20;
   }
 }
 

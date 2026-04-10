@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { useData } from "vitepress";
 import routeMap from "../../../data/route-map.json";
 
-const { frontmatter } = useData();
+const { frontmatter, page } = useData();
 
 const related = computed(() => {
   const list = frontmatter.value.related || [];
@@ -21,10 +21,22 @@ const sources = computed(() => frontmatter.value.sources || []);
 const tags = computed(() => frontmatter.value.tags || []);
 const evolution = computed(() => (frontmatter.value.evolution || []).slice().reverse());
 const category = computed(() => frontmatter.value.category || "");
+const headers = computed(() =>
+  (page.value.headers || []).filter((header: any) => (header.level || 0) <= 3)
+);
 </script>
 
 <template>
   <aside class="wiki-sidebar" v-if="frontmatter.title">
+    <section v-if="headers.length">
+      <h4>目录</h4>
+      <ul>
+        <li v-for="header in headers" :key="header.slug">
+          <a :href="`#${header.slug}`">{{ header.title }}</a>
+        </li>
+      </ul>
+    </section>
+
     <section v-if="category">
       <h4>分类</h4>
       <div class="category-chip">{{ category }}</div>
@@ -67,7 +79,9 @@ const category = computed(() => frontmatter.value.category || "");
   padding: 1rem;
   font-size: 0.85rem;
   font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--vp-c-bg);
 }
+
 .wiki-sidebar h4 {
   margin: 1rem 0 0.5rem;
   font-size: 0.85rem;
@@ -75,20 +89,25 @@ const category = computed(() => frontmatter.value.category || "");
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
 .wiki-sidebar ul {
   list-style: none;
   padding: 0;
 }
+
 .wiki-sidebar li {
   padding: 0.2rem 0;
 }
+
 .wiki-sidebar a {
   color: var(--vp-c-text-1);
   text-decoration: none;
 }
+
 .wiki-sidebar a:hover {
   color: var(--vp-c-brand-1);
 }
+
 .category-chip,
 .tag {
   background: var(--vp-c-bg-soft);
@@ -97,15 +116,19 @@ const category = computed(() => frontmatter.value.category || "");
   font-size: 0.75rem;
   color: var(--vp-c-text-2);
 }
+
 .tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
 }
+
 .source {
   color: var(--vp-c-text-3);
   font-size: 0.75rem;
+  overflow-wrap: anywhere;
 }
+
 .evolution li {
   color: var(--vp-c-text-3);
   border-left: 2px solid var(--vp-c-divider);
