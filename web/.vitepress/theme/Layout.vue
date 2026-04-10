@@ -44,15 +44,16 @@ const { frontmatter, page } = useData();
   gap: 2rem;
 }
 
-@media (min-width: 1280px) {
-  .VPDocAside {
+@media (min-width: 960px) {
+  .VPDoc .aside {
     display: block !important;
     width: 280px !important;
-    padding-left: 0 !important;
+    max-width: 280px !important;
+    padding-left: 32px !important;
   }
 
-  .VPDocAside .content {
-    width: 280px !important;
+  .VPDoc .aside-container {
+    width: 248px !important;
   }
 }
 
