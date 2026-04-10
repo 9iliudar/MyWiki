@@ -18,7 +18,7 @@ const { page } = useData();
 <style>
 /* Center wiki detail page content */
 .VPDoc.has-aside .container {
-  max-width: 784px !important;
+  max-width: 1360px !important;
   margin: 0 auto !important;
   justify-content: center !important;
 }
@@ -44,6 +44,14 @@ const { page } = useData();
   justify-content: center !important;
 }
 
+.VPDoc.has-aside .content {
+  max-width: 1032px !important;
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: 1032px !important;
+}
+
 .wiki-detail-rail {
   display: none;
 }
@@ -52,7 +60,7 @@ const { page } = useData();
   .wiki-detail-rail {
     position: fixed;
     top: calc(var(--vp-nav-height, 64px) + 32px);
-    right: max(24px, calc((100vw - 1180px) / 2));
+    right: max(24px, calc((100vw - 1420px) / 2));
     display: block;
     width: 248px;
     max-height: calc(100vh - var(--vp-nav-height, 64px) - 48px);
