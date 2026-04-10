@@ -15,3 +15,10 @@
 **素材**: 2026-04-09_sdd-spec-schema-prompt.md
 **影响页面**: Spec, Schema, Prompt
 **摘要**: 用户确认已分别掌握 Spec、Schema、Prompt 三个概念，因此将它们从组合总览页中提升为独立正式页面，同时保留总览页作为三者关系页。
+
+## 2026-04-10 11:55
+
+**操作**: update
+**素材**: conversation
+**影响页面**: SDD
+**摘要**: 补充了 SDD 与 Vibe Coding 的关系：Vibe Coding 降低实现成本，SDD 降低偏航成本；在 AI 开发中，真实产品开发通常更适合采用 SDD + AI 的组合方式。
