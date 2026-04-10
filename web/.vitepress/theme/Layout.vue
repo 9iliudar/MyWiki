@@ -53,7 +53,7 @@ const { page } = useData();
   .wiki-detail-rail {
     position: fixed;
     top: calc(var(--vp-nav-height, 64px) + 32px);
-    right: max(24px, calc((100vw - 1180px) / 2));
+    right: max(24px, calc((100vw - 1320px) / 2));
     display: block;
     width: 248px;
     max-height: calc(100vh - var(--vp-nav-height, 64px) - 48px);
