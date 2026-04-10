@@ -3,6 +3,7 @@ category: AI
 created: '2026-04-09'
 evolution:
 - '2026-04-09: 从 Spec-Schema-Prompt 总览中拆分为独立正式概念页'
+- '2026-04-10: 补充英文术语音标规范'
 related:
 - '[[SDD]]'
 - '[[Spec]]'
@@ -14,15 +15,15 @@ tags:
 - AI
 - LLM
 - 提示工程
-title: Prompt
-updated: '2026-04-09'
+title: Prompt /prɑːmpt/
+updated: '2026-04-10'
 ---
 
-# Prompt
+# Prompt /prɑːmpt/
 
 ## 定义
 
-Prompt 可以理解为给模型的即时操作指令。它负责把抽象的规格要求和结构约束，翻译成模型当前这次任务要执行的具体命令。
+Prompt /prɑːmpt/ 可以理解为给模型的即时操作指令。它负责把抽象的规格要求和结构约束，翻译成模型当前这次任务要执行的具体命令。
 
 ## 核心作用
 

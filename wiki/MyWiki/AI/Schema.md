@@ -3,6 +3,7 @@ category: AI
 created: '2026-04-09'
 evolution:
 - '2026-04-09: 从 Spec-Schema-Prompt 总览中拆分为独立正式概念页'
+- '2026-04-10: 补充英文术语音标规范'
 related:
 - '[[SDD]]'
 - '[[Spec]]'
@@ -14,15 +15,15 @@ tags:
 - AI
 - 数据结构
 - 内容建模
-title: Schema
-updated: '2026-04-09'
+title: Schema /ˈskiːmə/
+updated: '2026-04-10'
 ---
 
-# Schema
+# Schema /ˈskiːmə/
 
 ## 定义
 
-Schema 可以理解为结构规则，描述某类数据或内容允许长成什么样。它关注的是对象内部的组织方式，而不是系统整体目标。
+Schema /ˈskiːmə/ 可以理解为结构规则，描述某类数据或内容允许长成什么样。它关注的是对象内部的组织方式，而不是系统整体目标。
 
 ## 核心作用
 

@@ -1,3 +1,22 @@
+/* Hide page-level scrollbars while preserving scroll behavior */
+.VPSwitchAppearance {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+html,
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
 /* Search modal card-style results */
 .VPLocalSearchBox .result {
   border: 1px solid var(--vp-c-divider) !important;

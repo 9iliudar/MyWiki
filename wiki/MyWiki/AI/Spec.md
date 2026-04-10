@@ -3,6 +3,7 @@ category: AI
 created: '2026-04-09'
 evolution:
 - '2026-04-09: 从 Spec-Schema-Prompt 总览中拆分为独立正式概念页'
+- '2026-04-10: 补充英文术语音标规范'
 related:
 - '[[SDD]]'
 - '[[Schema]]'
@@ -14,15 +15,15 @@ tags:
 - AI
 - 开发方法论
 - 规格说明
-title: Spec
-updated: '2026-04-09'
+title: Spec /spek/
+updated: '2026-04-10'
 ---
 
-# Spec
+# Spec /spek/
 
 ## 定义
 
-Spec 是 `Specification` 的简称，表示规格说明。它的作用不是泛泛描述需求，而是把需求转化为明确的执行标准和验收依据。
+Spec /spek/ 是 `Specification` /ˌspesɪfɪˈkeɪʃən/ 的简称，表示规格说明。它的作用不是泛泛描述需求，而是把需求转化为明确的执行标准和验收依据。
 
 ## 核心作用
 
