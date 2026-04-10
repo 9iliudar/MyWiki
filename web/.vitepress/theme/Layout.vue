@@ -44,6 +44,18 @@ const { frontmatter, page } = useData();
   gap: 2rem;
 }
 
+@media (min-width: 1280px) {
+  .VPDocAside {
+    display: block !important;
+    width: 280px !important;
+    padding-left: 0 !important;
+  }
+
+  .VPDocAside .content {
+    width: 280px !important;
+  }
+}
+
 /* Keep the detail page title vertically balanced */
 .VPDoc.has-aside .vp-doc > h1:first-child,
 .VPDoc.has-aside .vp-doc > div > h1:first-child {
