@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useData } from "vitepress";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { useData, useRoute } from "vitepress";
 import routeMap from "../../../data/route-map.json";
 
-const { frontmatter, page } = useData();
+const { frontmatter } = useData();
+const route = useRoute();
+const headers = ref<{ slug: string; title: string }[]>([]);
 
 const related = computed(() => {
   const list = frontmatter.value.related || [];
@@ -21,9 +23,26 @@ const sources = computed(() => frontmatter.value.sources || []);
 const tags = computed(() => frontmatter.value.tags || []);
 const evolution = computed(() => (frontmatter.value.evolution || []).slice().reverse());
 const category = computed(() => frontmatter.value.category || "");
-const headers = computed(() =>
-  (page.value.headers || []).filter((header: any) => (header.level || 0) <= 3)
-);
+
+async function collectHeaders() {
+  await nextTick();
+  const headingNodes = Array.from(
+    document.querySelectorAll(".vp-doc h2[id], .vp-doc h3[id]")
+  ) as HTMLHeadingElement[];
+
+  headers.value = headingNodes.map((node) => ({
+    slug: node.id,
+    title: node.textContent?.trim() || "",
+  }));
+}
+
+onMounted(() => {
+  collectHeaders();
+});
+
+watch(() => route.path, () => {
+  collectHeaders();
+});
 </script>
 
 <template>
