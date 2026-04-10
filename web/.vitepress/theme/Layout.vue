@@ -44,6 +44,12 @@ const { page } = useData();
   justify-content: center !important;
 }
 
+@media (min-width: 960px) {
+  .VPDoc.has-aside .content {
+    transform: translateX(-30px);
+  }
+}
+
 .wiki-detail-rail {
   display: none;
 }
