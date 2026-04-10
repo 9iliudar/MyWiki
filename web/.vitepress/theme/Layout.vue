@@ -59,6 +59,14 @@ const { page } = useData();
     max-height: calc(100vh - var(--vp-nav-height, 64px) - 48px);
     overflow-y: auto;
     z-index: 20;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .wiki-detail-rail::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
   }
 }
 
