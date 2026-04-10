@@ -42,13 +42,7 @@ const { page } = useData();
 .VPDoc.has-aside .container {
   display: flex !important;
   justify-content: center !important;
-  gap: 48px !important;
-}
-
-@media (min-width: 960px) {
-  .VPDoc.has-aside .content {
-    transform: translateX(-30px);
-  }
+  gap: 72px !important;
 }
 
 .wiki-detail-rail {
