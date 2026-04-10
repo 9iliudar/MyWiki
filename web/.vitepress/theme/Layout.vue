@@ -51,6 +51,7 @@ const { page } = useData();
 
 .VPDoc.has-aside .content-container {
   max-width: 652px !important;
+  padding-bottom: 120px !important;
 }
 
 .wiki-detail-rail {
