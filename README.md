@@ -211,17 +211,29 @@ This prevents knowledge explosion.
 
 The user discusses a concept until it is actually understood.
 
-### 2. Internalize
+### 2. Preview (Cognitive Assessment)
 
-Only mastered concepts are promoted into formal wiki pages.
+Before ingesting, call `wiki_preview` to generate a cognitive snapshot. This evaluates what the user demonstrated understanding of:
 
-If a concept is not yet mastered, it should stay in candidates or remain only in source material.
+- **mastered** — user explained it in their own words or asked deep questions
+- **likely** — user said "got it" but didn't elaborate
+- **unconfirmed** — AI explained but user didn't engage
 
-### 3. Archive
+### 3. Confirm and Internalize
+
+The user reviews the snapshot and confirms which concepts to ingest. Only confirmed concepts enter the formal wiki. Each page gets a `mastery` level:
+
+- `deep` — can explain to others, understands edge cases
+- `solid` — understands core principles, can use in practice
+- `surface` — knows what it is, details fuzzy
+
+Mastery only goes up, never down.
+
+### 4. Archive
 
 The original conversation snapshot or source material is archived under `sources/archived/`.
 
-### 4. Rebuild Web Data
+### 5. Rebuild Web Data
 
 After wiki pages change, rebuild the WebUI data:
 
@@ -229,11 +241,22 @@ After wiki pages change, rebuild the WebUI data:
 node web\scripts\prepare.js
 ```
 
-### 5. Review in Obsidian or WebUI
+### 6. Review in Obsidian or WebUI
 
 Obsidian reads the raw Markdown structure from `wiki/MyWiki`.
 
 WebUI reads generated page metadata from `web/data` and generated markdown pages from `web/pages`.
+
+## MCP Tools
+
+The engine runs as an MCP server for integration with Claude Code / VS Code:
+
+| Tool | Description |
+|------|-------------|
+| `wiki_preview(content)` | Cognitive assessment — evaluates what the user understood, returns snapshot. No writes. |
+| `wiki_ingest(content, title?, category?)` | Digest confirmed knowledge into wiki pages with mastery tracking. |
+| `wiki_query(question)` | Search wiki and answer questions. Results boosted by mastery level. |
+| `wiki_lint()` | Health check — find contradictions, orphans, gaps and auto-fix. |
 
 ## CLI Usage
 
@@ -308,19 +331,16 @@ If you are a future maintainer or AI agent, follow these rules:
 
 ## Key Outcomes Achieved So Far
 
-This project has already established several important corrections:
+- Category-based wiki storage with single Obsidian vault
+- Candidate-layer buffering to avoid concept explosion
+- **Cognitive preview** — two-step confirmation before ingest
+- **Mastery tracking** — `deep` / `solid` / `surface` per page, only goes up
+- **Mastery-boosted query** — answers prioritize deeply understood knowledge
+- Route-aware WebUI with knowledge graph (mastery-aware nodes)
+- MCP server integration for Claude Code / VS Code
+- Local embedding (fastembed) + Qdrant vector search
 
-- category-based wiki storage
-- candidate-layer buffering to avoid concept explosion
-- route-aware WebUI pages and graph navigation
-- Obsidian-compatible single-vault structure
-- a cleaner distinction between formal knowledge and overview pages
-
-These are not minor implementation details. They are the current operating model of the repository.
-
-## Recommended Next Principle
-
-When in doubt, use this decision rule:
+## Core Decision Rule
 
 `If the user has not clearly understood it, do not promote it into the formal wiki yet.`
 
