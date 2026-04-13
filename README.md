@@ -6,17 +6,22 @@ It is not a generic note dump. Its purpose is to turn conversation, reading, and
 
 ## Core Idea
 
-The project follows one simple principle:
+This is a **personal knowledge digestion tracker**, not a knowledge base organizer.
 
-`Chat = input, wiki = formalized knowledge, web = readable output`
+The key distinction: this system does **not** assume you already understand the material being ingested. It tracks what you have actually digested through conversation, questioning, and reflection — and only promotes that into the formal wiki.
 
-The system is designed around "internalization", not "collection".
+If you dump a pile of articles in and let the AI summarize them, you get a wiki full of things the AI understood but you didn't. That's useless. This project exists to prevent exactly that.
+
+The principle:
+
+`Chat = input, wiki = what I actually understand, web = readable output`
 
 That means:
 
-- A concept should enter the formal wiki only after the user has actually understood it.
-- Mentioned concepts should not automatically explode into many pages.
-- The knowledge network should grow slowly, deliberately, and by mastery.
+- A concept enters the formal wiki only after you have demonstrated understanding of it.
+- Mentioned concepts do not automatically become pages.
+- The knowledge network grows slowly, deliberately, and by mastery — not by volume.
+- The wiki reflects your real cognitive state at any point in time.
 
 This is the most important design decision in the whole repository.
 

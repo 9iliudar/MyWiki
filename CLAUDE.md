@@ -1,10 +1,12 @@
 # LLM Wiki - Knowledge Evolution Engine
 
-This project is a personal knowledge evolution engine. When the user discusses knowledge topics, you should help them internalize knowledge into the wiki.
+This project is a personal knowledge digestion tracker — not a knowledge base organizer.
+
+It does **not** assume the user already understands the material. The wiki should reflect what the user has actually digested through conversation, not what the AI has summarized for them. If a concept enters the wiki but the user can't explain it, the system has failed.
 
 ## Core Principle
 
-**Only internalize what the user has actually understood.** Do not equate "mentioned" with "mastered".
+**Only internalize what the user has actually understood.** Do not equate "mentioned" with "mastered". The wiki is a mirror of the user's real cognitive state.
 
 ## Recommended Workflow (Two-Step Confirmation)
 

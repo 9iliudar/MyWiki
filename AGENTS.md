@@ -1,14 +1,14 @@
 # LLM Wiki - Knowledge Evolution Engine
 
-This repository is a personal knowledge evolution system.
+This repository is a personal knowledge digestion tracker, not a knowledge base organizer.
 
-Its goal is not to collect everything. Its goal is to internalize what the user has actually understood and turn that into a clean, searchable, publishable knowledge network.
+It does **not** assume the user already understands the material. The wiki must reflect what the user has actually digested — not what the AI could summarize. If you ingest a batch of articles and produce pages the user can't explain, you have broken the system.
 
 Read `README.md` first for the current system design.
 
 ## Core Operating Principle
 
-Do not equate "mentioned" with "mastered".
+Do not equate "mentioned" with "mastered". The wiki mirrors the user's real cognitive state.
 
 Default behavior:
 
