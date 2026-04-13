@@ -149,6 +149,55 @@ INDEX_REBUILD_PROMPT = """你是一个知识管理引擎。根据以下所有 Wi
 直接输出 Markdown 内容，不需要 JSON 包装。"""
 
 
+PREVIEW_PROMPT = """你是一个认知评估引擎。你的任务不是整理知识，而是判断用户在这段对话中**真正理解了什么**。
+
+## 对话内容
+
+{content}
+
+## 现有 Wiki 页面列表
+
+{existing_pages}
+
+## 判断标准
+
+你要区分"用户理解了"和"AI 单方面讲了"：
+
+- ✅ 用户用自己的话解释了某个概念 → **mastered**
+- ✅ 用户提出了有深度的追问或质疑 → **mastered**
+- ✅ 用户做出了正确的类比或联想 → **mastered**
+- ⚠️ 用户说"明白了""懂了"但没有展开 → **likely**（大概理解）
+- ❌ AI 解释了但用户没有回应 → **unconfirmed**
+- ❌ 用户只是复制/转述了原文 → **unconfirmed**
+
+## 输出格式
+
+严格按以下 JSON 格式输出：
+
+```json
+{{
+  "concepts": [
+    {{
+      "name": "概念文件名（英文）",
+      "title": "概念标题",
+      "mastery": "mastered|likely|unconfirmed",
+      "evidence": "判断依据（引用用户的原话或行为）",
+      "action": "ingest|candidate|skip",
+      "proposed_content_summary": "如果建议 ingest，用 1-2 句话概括拟写入的内容方向"
+    }}
+  ],
+  "summary": "本次对话的认知收获总结（3-5 句话）"
+}}
+```
+
+## 注意
+
+- `action` 规则：mastered → ingest，likely → candidate，unconfirmed → skip
+- 宁可漏判，不可误判。不确定时降级处理。
+- 只输出 JSON，不要输出其他内容。
+"""
+
+
 INGEST_REPAIR_PROMPT = """You are repairing the output of a wiki ingest step.
 
 Return strict JSON only. Do not include explanations, markdown fences, or extra prose.

@@ -123,6 +123,73 @@ def handle_lint(llm=None, embedder=None, vector_store=None, wiki_env: dict = Non
     return "\n".join(lines)
 
 
+def handle_preview(content: str, llm=None, embedder=None, vector_store=None, wiki_env: dict = None) -> str:
+    from engine.prompts import PREVIEW_PROMPT
+    from engine.json_utils import parse_llm_json
+
+    if wiki_env:
+        wiki = WikiIO(wiki_env["pages_dir"], wiki_env["index_path"], wiki_env["log_path"])
+        if not llm:
+            raise ValueError("llm is required when wiki_env is provided")
+    else:
+        c = _get_components()
+        llm = c["llm"]
+        wiki = c["wiki"]
+
+    existing_pages = ", ".join(wiki.list_pages()) or "（暂无页面）"
+    prompt = PREVIEW_PROMPT.format(content=content, existing_pages=existing_pages)
+    raw_response = llm.complete(prompt)
+    response = parse_llm_json(raw_response)
+
+    concepts = response.get("concepts", [])
+    summary = response.get("summary", "")
+
+    lines = [f"## 认知快照\n", f"{summary}\n"]
+
+    mastered = [c for c in concepts if c.get("mastery") == "mastered"]
+    likely = [c for c in concepts if c.get("mastery") == "likely"]
+    unconfirmed = [c for c in concepts if c.get("mastery") == "unconfirmed"]
+
+    if mastered:
+        lines.append("### ✅ 已掌握（建议入库）")
+        for c in mastered:
+            lines.append(f"- **{c['title']}** (`{c['name']}`)")
+            lines.append(f"  依据：{c.get('evidence', '')}")
+            if c.get("proposed_content_summary"):
+                lines.append(f"  拟写入：{c['proposed_content_summary']}")
+        lines.append("")
+
+    if likely:
+        lines.append("### ⚠️ 大概理解（建议进候选层）")
+        for c in likely:
+            lines.append(f"- **{c['title']}** (`{c['name']}`)")
+            lines.append(f"  依据：{c.get('evidence', '')}")
+        lines.append("")
+
+    if unconfirmed:
+        lines.append("### ❌ 未确认理解（暂不处理）")
+        for c in unconfirmed:
+            lines.append(f"- **{c['title']}** (`{c['name']}`)")
+            lines.append(f"  依据：{c.get('evidence', '')}")
+        lines.append("")
+
+    if mastered:
+        names = ", ".join(c["name"] for c in mastered)
+        lines.append(f'如确认，请说"入库"或调用 wiki_ingest 写入以上 {len(mastered)} 个概念。')
+
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def wiki_preview(content: str) -> str:
+    """认知评估预览。分析对话内容，判断用户真正理解了哪些概念，返回认知快照供确认。不写入任何文件。
+
+    Args:
+        content: 对话内容（文本）
+    """
+    return handle_preview(content)
+
+
 @mcp.tool()
 def wiki_ingest(content: str, title: str = "", category: str = "") -> str:
     """消化新知识到 Wiki。当对话中出现值得记录的新知识、概念或见解时调用此工具。

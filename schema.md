@@ -53,9 +53,18 @@ related:
 tags:
   - 标签1
   - 标签2
+mastery: deep|solid|surface
 evolution:
   - "YYYY-MM-DD: 变更说明"
 ---
+
+### mastery 字段说明
+
+- `deep` — 能给别人讲明白，掌握细节和边界
+- `solid` — 理解核心原理，能在实践中使用
+- `surface` — 知道是什么，但细节模糊
+
+mastery 只升不降。当用户在后续对话中展示了更深入的理解时，由 ingest 自动升级。
 ```
 
 ## 标题与术语规范

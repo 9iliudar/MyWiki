@@ -13,6 +13,13 @@ from engine.wiki_io import WikiIO
 
 MIN_CONTENT_CHARS = 180
 
+_MASTERY_RANK = {"surface": 0, "solid": 1, "deep": 2}
+
+
+def _higher_mastery(a: str, b: str) -> str:
+    """Return the higher mastery level between two values. Mastery only goes up, never down."""
+    return a if _MASTERY_RANK.get(a, 1) >= _MASTERY_RANK.get(b, 1) else b
+
 
 class IngestPipeline:
     def __init__(
@@ -75,6 +82,7 @@ class IngestPipeline:
                 "related": page_data.get("related", []),
                 "tags": page_data.get("tags", []),
                 "category": source_category,
+                "mastery": page_data.get("mastery", "solid"),
                 "evolution": [f"{today}: {'初始创建' if page_data.get('is_new', True) else '更新内容'}"],
             }
 
@@ -84,6 +92,7 @@ class IngestPipeline:
                 fm["sources"] = list(set(existing["frontmatter"].get("sources", []) + fm["sources"]))
                 fm["related"] = list(set(existing["frontmatter"].get("related", []) + fm["related"]))
                 fm["tags"] = list(set(existing["frontmatter"].get("tags", []) + fm["tags"]))
+                fm["mastery"] = _higher_mastery(existing["frontmatter"].get("mastery", "solid"), fm["mastery"])
                 fm["evolution"] = existing["frontmatter"].get("evolution", []) + fm["evolution"]
 
             self.wiki.write_page(name, fm, page_data["content"], category=source_category)

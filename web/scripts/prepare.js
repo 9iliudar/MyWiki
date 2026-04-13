@@ -67,6 +67,7 @@ function main() {
       sources: data.sources || [],
       created: data.created || "",
       updated: data.updated || "",
+      mastery: data.mastery || "solid",
       evolution: data.evolution || [],
     });
 
@@ -110,7 +111,7 @@ function main() {
     titleToName[page.name] = page.name;
   }
 
-  const nodes = allMeta.map((p) => ({ id: p.name, title: p.title, tags: p.tags, category: p.category }));
+  const nodes = allMeta.map((p) => ({ id: p.name, title: p.title, tags: p.tags, category: p.category, mastery: p.mastery }));
   const edgeSet = new Set();
   const edges = [];
 

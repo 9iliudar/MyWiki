@@ -24,7 +24,7 @@ class ClaudeProvider(LLMProvider):
         messages.append({"role": "user", "content": prompt})
         # Use streaming to avoid gateway timeouts on third-party proxies
         result = []
-        with self.client.messages.stream(model=self.model, max_tokens=8192, messages=messages) as stream:
+        with self.client.messages.stream(model=self.model, max_tokens=16384, messages=messages) as stream:
             for text in stream.text_stream:
                 result.append(text)
         return "".join(result)

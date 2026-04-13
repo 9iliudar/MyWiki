@@ -18,6 +18,16 @@ class QueryPipeline:
         query_vector = self.embedder.embed(question)
         search_results = self.vector_store.search(query_vector, top_k=10)
 
+        # Boost results by mastery level: deep > solid > surface
+        mastery_boost = {"deep": 0.15, "solid": 0.0, "surface": -0.10}
+        for result in search_results:
+            page_id = result["id"]
+            if self.wiki.page_exists(page_id):
+                page = self.wiki.read_page(page_id)
+                mastery = page["frontmatter"].get("mastery", "solid")
+                result["score"] = result.get("score", 0) + mastery_boost.get(mastery, 0)
+        search_results.sort(key=lambda r: r.get("score", 0), reverse=True)
+
         context_pages = []
         for result in search_results:
             page_id = result["id"]
