@@ -1,5 +1,7 @@
 # MyWiki
 
+**English** | [中文](README_zh.md)
+
 MyWiki is a personal knowledge evolution system.
 
 It is not a generic note dump. Its purpose is to turn conversation, reading, and project thinking into a controlled personal knowledge network that can be searched, refined, and published.
