@@ -564,51 +564,9 @@ watch(activeClusterId, () => {
 <template>
   <div
     v-if="open"
-    class="universe-overlay"
+    class="universe-container"
     :class="warpPhase"
-    @click="emit('close')"
   >
-    <div
-      class="universe-shell"
-      role="dialog"
-      aria-modal="true"
-      @click.stop
-    >
-      <!-- Top bar -->
-      <div class="universe-topbar">
-        <div class="universe-brand"><h2>Knowledge Universe</h2></div>
-        <div class="universe-top-actions">
-          <label class="universe-search">
-            <input
-              v-model="query"
-              type="text"
-              placeholder="Search concepts..."
-            />
-          </label>
-          <button
-            class="universe-close"
-            aria-label="Close"
-            title="Close"
-            @click="emit('close')"
-          >
-            ✕
-          </button>
-        </div>
-      </div>
-
-      <!-- Search results -->
-      <div v-if="searchResults.length" class="universe-search-panel">
-        <button
-          v-for="node in searchResults"
-          :key="node.id"
-          class="universe-search-result"
-          @click="query = ''; enterNode(node.id)"
-        >
-          <strong>{{ node.name }}</strong>
-          <span>{{ node.domain }}</span>
-        </button>
-      </div>
-
       <!-- Scene -->
       <div
         ref="sceneRef"
@@ -723,30 +681,6 @@ watch(activeClusterId, () => {
           </div>
         </div>
 
-        <!-- Controls -->
-        <div class="universe-controls">
-          <button type="button" title="Back" @click="handleBack">
-            ↶
-          </button>
-          <button
-            type="button"
-            title="Reset"
-            @click="
-              () => {
-                const first = allNodes[0]?.id ?? '';
-                centerId = first;
-                selectedId = null;
-                history = [first];
-                rotation = { x: -0.24, y: 0.42 };
-                rotationCache = rotation;
-                stopInertia();
-              }
-            "
-          >
-            ◎
-          </button>
-        </div>
-
         <!-- HUD -->
         <aside v-if="selectedNode" class="universe-hud">
           <div class="universe-hud-top">
@@ -782,148 +716,34 @@ watch(activeClusterId, () => {
           </div>
         </aside>
       </div>
-    </div>
   </div>
 </template>
 
 <style scoped>
-/* ── Variables (MyWiki violet palette) ── */
-.universe-overlay {
-  --uni-brand: #8b5cf6;
-  --uni-brand-soft: rgba(139, 92, 246, 0.18);
-  --uni-brand-strong: rgba(139, 92, 246, 0.35);
-  --uni-brand-glow: rgba(139, 92, 246, 0.5);
-  --uni-bg: #0a0a12;
-  --uni-bg-card: rgba(20, 20, 35, 0.85);
-  --uni-text-1: #e8e8f0;
-  --uni-text-2: rgba(232, 232, 240, 0.65);
-  --uni-text-3: rgba(232, 232, 240, 0.4);
-  --uni-border: rgba(139, 92, 246, 0.12);
+/* ── Variables (VitePress native) ── */
+.universe-container {
+  --uni-brand: var(--vp-c-brand-1, #8b5cf6);
+  --uni-brand-soft: var(--vp-c-bg-soft);
+  --uni-brand-strong: var(--vp-c-brand-soft, rgba(139, 92, 246, 0.14));
+  --uni-bg: var(--vp-c-bg);
+  --uni-bg-card: var(--vp-c-bg-soft);
+  --uni-text-1: var(--vp-c-text-1);
+  --uni-text-2: var(--vp-c-text-2);
+  --uni-text-3: var(--vp-c-text-3);
+  --uni-border: var(--vp-c-divider);
   --uni-radius: 10px;
 }
 
-/* ── Overlay ── */
-.universe-overlay {
+/* ── Container (inline, not overlay) ── */
+.universe-container {
   position: fixed;
-  inset: 0;
-  z-index: 200;
+  top: var(--vp-nav-height, 64px);
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: var(--uni-bg);
   overflow: hidden;
-}
-
-.universe-shell {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── Top bar ── */
-.universe-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.8rem 1.2rem;
-  border-bottom: 1px solid var(--uni-border);
-  background: var(--uni-bg-card);
-  backdrop-filter: blur(12px);
-  z-index: 20;
-  flex-shrink: 0;
-}
-
-.universe-brand h2 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--uni-text-1);
-  margin: 0;
-  letter-spacing: 0.02em;
-}
-
-.universe-top-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.universe-search input {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--uni-border);
-  border-radius: 8px;
-  padding: 0.45rem 0.8rem;
-  color: var(--uni-text-1);
-  font-size: 0.85rem;
-  outline: none;
-  width: 200px;
-  font-family: inherit;
-}
-
-.universe-search input::placeholder {
-  color: var(--uni-text-3);
-}
-
-.universe-search input:focus {
-  border-color: var(--uni-brand-strong);
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.08);
-}
-
-.universe-close {
-  background: none;
-  border: 1px solid var(--uni-border);
-  border-radius: 8px;
-  color: var(--uni-text-2);
-  font-size: 1rem;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.universe-close:hover {
-  color: var(--uni-text-1);
-  border-color: var(--uni-brand-strong);
-}
-
-/* ── Search panel ── */
-.universe-search-panel {
-  position: absolute;
-  top: 56px;
-  right: 1.2rem;
-  width: 280px;
-  max-height: 360px;
-  overflow-y: auto;
-  z-index: 30;
-  background: var(--uni-bg-card);
-  border: 1px solid var(--uni-border);
-  border-radius: var(--uni-radius);
-  backdrop-filter: blur(12px);
-  padding: 0.4rem;
-}
-
-.universe-search-result {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0.5rem 0.7rem;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--uni-text-1);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 0.85rem;
-}
-
-.universe-search-result:hover {
-  background: var(--uni-brand-soft);
-}
-
-.universe-search-result strong {
-  font-weight: 600;
-}
-
-.universe-search-result span {
-  font-size: 0.75rem;
-  color: var(--uni-text-3);
+  z-index: 1;
 }
 
 /* ── Scene ── */
@@ -942,80 +762,44 @@ watch(activeClusterId, () => {
   cursor: grabbing;
 }
 
-/* ── Backdrop (starfield) ── */
+/* ── Backdrop ── */
 .universe-backdrop {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 70%),
-    radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.25) 0%, transparent 100%),
-    radial-gradient(1px 1px at 40% 70%, rgba(255, 255, 255, 0.2) 0%, transparent 100%),
-    radial-gradient(1px 1px at 60% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 100%),
-    radial-gradient(1px 1px at 80% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 10% 60%, rgba(139, 92, 246, 0.3) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 70% 80%, rgba(139, 92, 246, 0.25) 0%, transparent 100%),
-    radial-gradient(1px 1px at 90% 15%, rgba(255, 255, 255, 0.18) 0%, transparent 100%),
-    radial-gradient(1px 1px at 35% 90%, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
   pointer-events: none;
 }
 
-/* ── Core glow ── */
+/* ── Core (subtle center indicator) ── */
 .universe-core {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 180px;
-  height: 180px;
+  width: 120px;
+  height: 120px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(139, 92, 246, 0.15) 0%,
-    rgba(139, 92, 246, 0.04) 50%,
-    transparent 70%
-  );
+  border: 1px solid var(--uni-border);
+  opacity: 0.3;
   pointer-events: none;
-  animation: core-pulse 6s ease-in-out infinite;
-}
-
-@keyframes core-pulse {
-  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
 }
 
 /* ── Warp effects ── */
 .universe-warp-veil {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse at var(--warp-origin-x, 50%) var(--warp-origin-y, 50%),
-    rgba(139, 92, 246, 0.3) 0%,
-    transparent 60%
-  );
+  background: var(--uni-bg);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s;
 }
 
-.warp-lock .universe-warp-veil { opacity: 0.3; }
-.warp-out .universe-warp-veil { opacity: 0.8; }
+.warp-lock .universe-warp-veil { opacity: 0.2; }
+.warp-out .universe-warp-veil { opacity: 0.5; }
 .warp-in .universe-warp-veil { opacity: 0; }
 
 .universe-warp-lines {
-  position: absolute;
-  inset: 0;
-  background: repeating-conic-gradient(
-    from 0deg at var(--warp-origin-x, 50%) var(--warp-origin-y, 50%),
-    transparent 0deg,
-    rgba(139, 92, 246, 0.06) 2deg,
-    transparent 4deg
-  );
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s;
+  display: none;
 }
-
-.warp-out .universe-warp-lines { opacity: 1; }
 
 .universe-warp-ghost {
   position: absolute;
@@ -1028,10 +812,9 @@ watch(activeClusterId, () => {
 }
 
 .universe-warp-ghost span {
-  color: var(--uni-brand);
+  color: var(--uni-text-1);
   font-weight: 700;
   font-size: 0.95rem;
-  text-shadow: 0 0 12px var(--uni-brand-glow);
 }
 
 .universe-warp-ghost small {
@@ -1065,12 +848,12 @@ watch(activeClusterId, () => {
 .universe-node {
   position: absolute;
   pointer-events: auto;
-  border: none;
+  border: 1px solid var(--uni-border);
   background: var(--uni-brand-soft);
   border-radius: 20px;
   padding: 0.35rem 0.75rem;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition: background 0.2s, border-color 0.2s;
   font-family: inherit;
   white-space: nowrap;
 }
@@ -1100,15 +883,13 @@ watch(activeClusterId, () => {
 }
 
 .universe-node:hover {
-  background: var(--uni-brand-strong);
-  box-shadow: 0 0 16px rgba(139, 92, 246, 0.2);
+  background: var(--uni-brand-soft);
+  border-color: var(--uni-text-3);
 }
 
 .universe-node.active {
-  background: var(--uni-brand-strong);
-  box-shadow:
-    0 0 0 2px var(--uni-brand),
-    0 0 20px rgba(139, 92, 246, 0.25);
+  background: var(--uni-brand-soft);
+  border-color: var(--uni-brand);
 }
 
 .universe-node.is-distant {
@@ -1166,7 +947,6 @@ watch(activeClusterId, () => {
   background: var(--uni-bg-card);
   border: 1px solid var(--uni-border);
   border-radius: 999px;
-  backdrop-filter: blur(12px);
 }
 
 .universe-cat-chip {
@@ -1191,49 +971,17 @@ watch(activeClusterId, () => {
   color: #fff;
 }
 
-/* ── Controls ── */
-.universe-controls {
-  position: absolute;
-  bottom: 2.5rem;
-  right: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  z-index: 15;
-}
-
-.universe-controls button {
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--uni-border);
-  border-radius: 8px;
-  background: var(--uni-bg-card);
-  backdrop-filter: blur(12px);
-  color: var(--uni-text-2);
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.universe-controls button:hover {
-  border-color: var(--uni-brand-strong);
-  color: var(--uni-text-1);
-}
-
 /* ── HUD ── */
 .universe-hud {
   position: absolute;
   top: 1.2rem;
-  left: 1.2rem;
+  right: 1.2rem;
   width: 260px;
   max-height: calc(100% - 2.4rem);
   overflow-y: auto;
   background: var(--uni-bg-card);
   border: 1px solid var(--uni-border);
   border-radius: var(--uni-radius);
-  backdrop-filter: blur(16px);
   padding: 1rem 1.1rem;
   z-index: 15;
   scrollbar-width: none;
@@ -1270,7 +1018,7 @@ watch(activeClusterId, () => {
 
 .universe-hud-domain {
   font-size: 0.75rem;
-  color: var(--uni-brand);
+  color: var(--uni-text-2);
   font-weight: 500;
 }
 
@@ -1282,18 +1030,18 @@ watch(activeClusterId, () => {
 }
 
 .mastery-deep {
-  background: rgba(139, 92, 246, 0.2);
-  color: #c4b5fd;
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--vp-c-green-1, #22c55e);
 }
 
 .mastery-solid {
-  background: rgba(34, 197, 94, 0.15);
-  color: #86efac;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--vp-c-blue-1, #3b82f6);
 }
 
 .mastery-surface {
-  background: rgba(251, 191, 36, 0.15);
-  color: #fbbf24;
+  background: rgba(234, 179, 8, 0.1);
+  color: var(--vp-c-yellow-1, #eab308);
 }
 
 .universe-hud-tags {
@@ -1330,7 +1078,7 @@ watch(activeClusterId, () => {
   padding: 0.5rem;
   border: 1px solid var(--uni-border);
   border-radius: 8px;
-  background: var(--uni-brand-soft);
+  background: var(--uni-bg);
   color: var(--uni-text-1);
   font-size: 0.82rem;
   font-weight: 500;
@@ -1338,11 +1086,11 @@ watch(activeClusterId, () => {
   text-align: center;
   margin-bottom: 0.7rem;
   font-family: inherit;
-  transition: background 0.15s;
+  transition: border-color 0.15s;
 }
 
 .universe-hud-open:hover {
-  background: var(--uni-brand-strong);
+  border-color: var(--uni-text-3);
 }
 
 .universe-quick-links {
@@ -1379,10 +1127,6 @@ watch(activeClusterId, () => {
     width: 100%;
     max-height: 45vh;
     border-radius: var(--uni-radius) var(--uni-radius) 0 0;
-  }
-
-  .universe-category-panel {
-    bottom: 48vh;
   }
 }
 </style>
