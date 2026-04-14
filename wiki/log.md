@@ -64,3 +64,10 @@
 **素材**: conversation
 **影响页面**: Cesium, FastAPI, WebSocket, MQTT, PostgreSQL, TimescaleDB, Redis, ECharts, Grafana
 **摘要**: 按用户要求为单概念词条补充音标，并将解释改为短块化结构（定义、担当、误区、边界），提升词条可读性与表达完整度，避免仅复述原话。
+
+## 2026-04-14 17:20
+
+**操作**: refine
+**素材**: conversation
+**影响页面**: Digital-Twin, Three.js, Cesium, FastAPI, WebSocket, MQTT, PostgreSQL, TimescaleDB, Redis, ECharts, Grafana
+**摘要**: 按用户要求将 IoT 词条统一改为“概念词典口径”，移除讨论阶段的具象案例化表达，统一为抽象定义、核心能力、概念边界、常见误解和一句话总结，确保词条通用、可复用、可迁移。
