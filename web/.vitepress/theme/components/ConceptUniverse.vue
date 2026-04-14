@@ -966,7 +966,7 @@ watch(activeClusterId, () => {
 /* ── HUD ── */
 .universe-hud {
   position: absolute;
-  top: 1.2rem;
+  top: 3.5rem;
   right: 1.2rem;
   width: 260px;
   max-height: calc(100% - 2.4rem);
