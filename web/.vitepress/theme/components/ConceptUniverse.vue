@@ -109,12 +109,15 @@ function scoreNode(node: UniverseNode) {
 const visibleNodes = computed(() => {
   const center = centerNode.value;
   if (!center) return [];
-  // Always show all nodes — dataset is small enough
-  const others = allNodes.value.filter((n) => n.id !== center.id);
-  return [center, ...others.sort((a, b) => scoreNode(b) - scoreNode(a))].slice(
-    0,
-    MAX_VISIBLE_NODES
-  );
+  // Filter by active cluster
+  const pool = activeCluster.value
+    ? allNodes.value.filter((n) => n.domain === activeCluster.value!.label)
+    : allNodes.value;
+  const others = pool.filter((n) => n.id !== center.id);
+  const list = pool.some((n) => n.id === center.id)
+    ? [center, ...others.sort((a, b) => scoreNode(b) - scoreNode(a))]
+    : others.sort((a, b) => scoreNode(b) - scoreNode(a));
+  return list.slice(0, MAX_VISIBLE_NODES);
 });
 
 const quickLinks = computed(() => {
