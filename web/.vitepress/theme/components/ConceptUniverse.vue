@@ -563,6 +563,7 @@ watch(activeClusterId, () => {
 
 <template>
   <div
+    v-if="open"
     class="universe-overlay"
     :class="warpPhase"
     @click="emit('close')"
