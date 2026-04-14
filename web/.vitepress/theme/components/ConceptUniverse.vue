@@ -693,9 +693,6 @@ watch(activeClusterId, () => {
               {{ tag }}
             </span>
           </div>
-          <div class="universe-importance" :aria-label="`Importance ${selectedNode.importance}/5`">
-            <span v-for="i in 5" :key="i" :class="i <= selectedNode.importance ? 'filled' : ''">●</span>
-          </div>
           <button class="universe-hud-open" @click="navigateToPage(selectedNode)">
             Open page →
           </button>
@@ -1055,17 +1052,6 @@ watch(activeClusterId, () => {
   border: 1px solid var(--uni-border);
 }
 
-.universe-importance {
-  display: flex;
-  gap: 3px;
-  margin-bottom: 0.7rem;
-  font-size: 0.6rem;
-  color: var(--uni-text-3);
-}
-
-.universe-importance .filled {
-  color: var(--uni-brand);
-}
 
 .universe-hud-open {
   display: block;
