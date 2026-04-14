@@ -57,3 +57,10 @@
 **素材**: conversation
 **影响页面**: Cesium, FastAPI, WebSocket, MQTT, PostgreSQL, TimescaleDB, Redis, ECharts, Grafana
 **摘要**: 根据用户反馈，将此前混合概念页面撤回，改为单概念入库。以产品经理视角分别沉淀前端渲染、后端通信、数据存储、图表监控四组核心技术，保持概念边界清晰、页面职责单一，并重建知识导航结构。
+
+## 2026-04-14 17:05
+
+**操作**: refine
+**素材**: conversation
+**影响页面**: Cesium, FastAPI, WebSocket, MQTT, PostgreSQL, TimescaleDB, Redis, ECharts, Grafana
+**摘要**: 按用户要求为单概念词条补充音标，并将解释改为短块化结构（定义、担当、误区、边界），提升词条可读性与表达完整度，避免仅复述原话。

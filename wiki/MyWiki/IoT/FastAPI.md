@@ -3,6 +3,7 @@ category: IoT
 created: '2026-04-14'
 evolution:
 - '2026-04-14: 基于产品经理视角进行单概念入库'
+- '2026-04-14: 补充音标与概念边界说明'
 mastery: solid
 related:
 - '[[MQTT]]'
@@ -14,24 +15,32 @@ tags:
 - Python
 - 后端
 - API
-title: FastAPI
+title: FastAPI /ˌfæst ˌeɪpiːˈaɪ/
 updated: '2026-04-14'
 ---
 
-# FastAPI
+# FastAPI /ˌfæst ˌeɪpiːˈaɪ/
 
 ## 定义
 
-FastAPI 是基于 Python 的现代 Web 框架，适合快速构建 API 服务，支持异步处理并自带 OpenAPI 文档生成。
+FastAPI 是 Python Web 框架，强调开发效率、异步能力和接口文档自动化。
 
-## 在数字孪生项目中的担当
+## 产品经理可用表述
 
-FastAPI 在系统中通常是后端中枢：
+- FastAPI 是后端编排中枢，不只是“开接口工具”。
+- 它让 MVP 阶段的联调和改接口成本更低。
 
-- 对外提供 REST 接口（配置、控制、查询）
-- 承接设备消息后的业务校验与规则处理
-- 协调 [[MQTT]] 与 [[WebSocket]] 的数据流转
+## 在本项目中的担当
 
-## 价值
+- 提供配置、控制、查询等 REST 接口
+- 承接设备消息后的校验、去重和规则处理
+- 协调 [[MQTT]]（设备侧）与 [[WebSocket]]（前端侧）
 
-对产品迭代来说，FastAPI 的价值在于“开发快、改动快、联调快”，适合 MVP 阶段快速验证数据闭环。
+## 常见误区
+
+- 误区：FastAPI 只负责 CRUD。
+- 修正：在数字孪生中它还承担实时链路编排和状态确认逻辑。
+
+## 一句话边界
+
+`FastAPI 是业务与实时链路的后端中枢。`
