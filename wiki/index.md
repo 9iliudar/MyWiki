@@ -17,3 +17,14 @@
 - [[数字孪生（Digital Twin /ˈdɪdʒɪtl twɪn/）]]
 
 - [[Three.js]] - Web 端 3D 渲染与交互引擎,数字孪生可视化层核心技术
+## IoT
+
+- [[Digital-Twin-Architecture]] - 数字孪生系统的完整技术栈设计
+- [[Redis-Message-Queue]] - 基于 Redis 的轻量级消息队列方案
+## 数据库
+
+- [[PostgreSQL-TimescaleDB]] - 时序数据存储方案
+
+## 项目管理
+
+- [[MVP-Scope-Definition]] - 最小可行产品范围定义
