@@ -748,8 +748,8 @@ watch(activeClusterId, () => {
 
 /* ── Scene ── */
 .universe-scene {
-  flex: 1;
-  position: relative;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
   cursor: grab;
   perspective: 940px;
