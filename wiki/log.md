@@ -50,3 +50,10 @@
 **素材**: 2026-04-14_mastered-digital-twin-stack-part2.md
 **影响页面**: PostgreSQL-TimescaleDB, MVP-Scope-Definition
 **摘要**: 用户在数字孪生项目第二阶段中，明确了技术栈选型的两个核心决策：一是选择 PostgreSQL + TimescaleDB 作为时序数据存储方案，理解了 TimescaleDB 作为 PostgreSQL 扩展的本质，以及它与 Redis 在架构中的分工；二是定义了 MVP 范围，梳理出完整的数据流路径（MQTT → FastAPI → Redis → WebSocket → 前端），并明确了分阶段实现策略。这两个决策为项目的技术实现奠定了清晰的基础架构。
+
+## 2026-04-14 16:20
+
+**操作**: refine
+**素材**: conversation
+**影响页面**: Cesium, FastAPI, WebSocket, MQTT, PostgreSQL, TimescaleDB, Redis, ECharts, Grafana
+**摘要**: 根据用户反馈，将此前混合概念页面撤回，改为单概念入库。以产品经理视角分别沉淀前端渲染、后端通信、数据存储、图表监控四组核心技术，保持概念边界清晰、页面职责单一，并重建知识导航结构。

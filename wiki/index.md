@@ -1,4 +1,4 @@
-# 知识导航
+﻿# 知识导航
 
 > 当前正式知识按分类收纳，候选概念不进入主导航。
 
@@ -13,18 +13,21 @@
 
 ## IoT
 
-### 数字化对象
-- [[数字孪生（Digital Twin /ˈdɪdʒɪtl twɪn/）]]
+### 核心概念
+- [[Digital-Twin]] - 数字孪生系统工程总览
+- [[Cesium]] - 园区级地理空间 3D 可视化
+- [[Three.js]] - 车间级 3D 渲染与交互
 
-- [[Three.js]] - Web 端 3D 渲染与交互引擎,数字孪生可视化层核心技术
-## IoT
+### 后端与通信
+- [[FastAPI]] - Python 后端接口与编排框架
+- [[MQTT]] - 设备侧发布订阅通信协议
+- [[WebSocket]] - 浏览器侧实时双向通道
 
-- [[Digital-Twin-Architecture]] - 数字孪生系统的完整技术栈设计
-- [[Redis-Message-Queue]] - 基于 Redis 的轻量级消息队列方案
-## 数据库
+### 数据层
+- [[PostgreSQL]] - 主数据与关系数据底座
+- [[TimescaleDB]] - 时间序列数据存储与查询
+- [[Redis]] - 最新状态缓存与实时缓冲层
 
-- [[PostgreSQL-TimescaleDB]] - 时序数据存储方案
-
-## 项目管理
-
-- [[MVP-Scope-Definition]] - 最小可行产品范围定义
+### 可视化层
+- [[ECharts]] - 业务页面定制图表
+- [[Grafana]] - 运维监控与告警看板
