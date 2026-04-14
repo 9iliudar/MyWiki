@@ -109,21 +109,12 @@ function scoreNode(node: UniverseNode) {
 const visibleNodes = computed(() => {
   const center = centerNode.value;
   if (!center) return [];
-  const firstRing = center.related
-    .map((id) => nodeMap.value.get(id))
-    .filter(Boolean) as UniverseNode[];
-  const firstRingIds = new Set(firstRing.map((n) => n.id));
-  const secondRing = firstRing
-    .flatMap((n) => n.related)
-    .filter((id) => id !== center.id && !firstRingIds.has(id))
-    .map((id) => nodeMap.value.get(id))
-    .filter(Boolean) as UniverseNode[];
-  const deduped = [
-    ...new Map([...firstRing, ...secondRing].map((n) => [n.id, n])).values(),
-  ];
-  return deduped
-    .sort((a, b) => scoreNode(b) - scoreNode(a))
-    .slice(0, MAX_VISIBLE_NODES);
+  // Always show all nodes — dataset is small enough
+  const others = allNodes.value.filter((n) => n.id !== center.id);
+  return [center, ...others.sort((a, b) => scoreNode(b) - scoreNode(a))].slice(
+    0,
+    MAX_VISIBLE_NODES
+  );
 });
 
 const quickLinks = computed(() => {
@@ -547,11 +538,12 @@ onUnmounted(() => {
   warpTimeouts.value.forEach((t) => clearTimeout(t));
 });
 
-/* ── Cluster switch ── */
+/* ── Cluster switch — recenter on first node of selected category ── */
 watch(activeClusterId, () => {
   if (!activeCluster.value) return;
-  if (centerNode.value?.domain === activeCluster.value.label) return;
-  const next = activeClusterNodes.value[0];
+  const next = activeClusterNodes.value.sort(
+    (a, b) => scoreNode(b) - scoreNode(a)
+  )[0];
   if (!next) return;
   centerId.value = next.id;
   selectedId.value = null;
