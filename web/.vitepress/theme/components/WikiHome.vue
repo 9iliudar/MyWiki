@@ -136,19 +136,21 @@ function triggerSearch() {
             </button>
           </div>
         </div>
-        <div class="filter-group">
+        <div class="filter-group tags-group">
           <span class="filter-label">Tags</span>
-          <div class="filter-chips" :class="{ expanded: tagsExpanded }">
-            <button
-              v-for="t in allTagsList"
-              :key="t.tag"
-              class="chip"
-              :class="{ active: selectedTag === t.tag }"
-              @click="toggleTag(t.tag)"
-            >
-              {{ t.tag }}
-              <span class="chip-count">{{ t.count }}</span>
-            </button>
+          <div class="tags-row">
+            <div class="filter-chips" :class="{ expanded: tagsExpanded }">
+              <button
+                v-for="t in allTagsList"
+                :key="t.tag"
+                class="chip"
+                :class="{ active: selectedTag === t.tag }"
+                @click="toggleTag(t.tag)"
+              >
+                {{ t.tag }}
+                <span class="chip-count">{{ t.count }}</span>
+              </button>
+            </div>
             <button
               v-if="allTagsList.length > 10"
               class="chip chip-toggle"
@@ -213,18 +215,20 @@ function triggerSearch() {
 .pulse-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--vp-c-divider); }
 
 /* Filter section */
-.filter-section { padding: 0.5rem 0; margin-bottom: 1rem; border-bottom: 1px solid var(--vp-c-divider); }
-.filter-row { display: flex; flex-direction: column; gap: 0.5rem; padding-bottom: 0.6rem; }
+.filter-section { padding: 0.5rem 0 0.8rem; margin-bottom: 1rem; border-bottom: 1px solid var(--vp-c-divider); }
+.filter-row { display: flex; flex-direction: column; gap: 0.5rem; }
 .filter-group { display: flex; align-items: baseline; gap: 0.5rem; }
 .filter-label { font-size: 0.72rem; font-weight: 600; color: var(--vp-c-text-3); text-transform: uppercase; letter-spacing: 0.04em; min-width: 56px; flex-shrink: 0; }
-.filter-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; overflow: hidden; max-height: 1.55rem; }
+.tags-group { align-items: flex-start; }
+.tags-row { display: flex; align-items: flex-start; gap: 0.4rem; min-width: 0; flex: 1; }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; overflow: hidden; max-height: 1.7rem; min-width: 0; flex: 1; }
 .filter-chips.expanded { max-height: none; }
 .chip { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border: 1px solid var(--vp-c-divider); border-radius: 999px; background: var(--vp-c-bg-soft); color: var(--vp-c-text-2); font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: background 0.15s, border-color 0.15s; white-space: nowrap; }
 .chip:hover { border-color: var(--vp-c-text-3); }
 .chip.active { background: var(--vp-c-brand-1); border-color: var(--vp-c-brand-1); color: #fff; }
 .chip-count { font-size: 0.65rem; background: var(--vp-c-bg); color: var(--vp-c-text-3); padding: 0 0.3rem; border-radius: 999px; min-width: 1em; text-align: center; }
 .chip.active .chip-count { background: rgba(255,255,255,0.2); color: #fff; }
-.chip-toggle { color: var(--vp-c-text-3); border-style: dashed; flex-shrink: 0; }
+.chip-toggle { color: var(--vp-c-text-3); border-style: dashed; flex-shrink: 0; margin-top: 0.05rem; }
 .chip-toggle:hover { color: var(--vp-c-text-2); }
 .filter-clear { align-self: flex-start; padding: 0.2rem 0.5rem; border: none; border-radius: 4px; background: transparent; color: var(--vp-c-text-3); font-size: 0.72rem; cursor: pointer; font-family: inherit; text-decoration: underline; }
 .filter-clear:hover { color: var(--vp-c-text-1); }
