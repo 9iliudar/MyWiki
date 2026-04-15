@@ -211,16 +211,21 @@ onMounted(async () => {
     .attr("fill", "var(--vp-c-text-2)")
     .attr("pointer-events", "none");
 
-  // Auto-fit: after simulation cools, zoom to fit all nodes with padding
-  let hasFitted = false;
   const zoomBehavior = d3.zoom<SVGSVGElement, unknown>()
     .scaleExtent([0.3, 4])
     .on("zoom", (event) => {
       rootGroup.attr("transform", event.transform);
     });
 
-  function fitToView() {
-    const pad = 60;
+  svg.call(zoomBehavior);
+
+  // Continuously fit all nodes into viewport during simulation (no jarring snap)
+  let userHasZoomed = false;
+  svg.on("wheel.flag mousedown.flag", () => { userHasZoomed = true; });
+
+  function silentFit() {
+    if (userHasZoomed) return;
+    const pad = 80;
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     graphData.nodes.forEach((n: any) => {
       if (n.x < minX) minX = n.x;
@@ -228,6 +233,7 @@ onMounted(async () => {
       if (n.x > maxX) maxX = n.x;
       if (n.y > maxY) maxY = n.y;
     });
+    if (!isFinite(minX)) return;
     const bw = maxX - minX + pad * 2;
     const bh = maxY - minY + pad * 2;
     const scale = Math.min(width / bw, height / bh, 1.5);
@@ -235,13 +241,8 @@ onMounted(async () => {
     const cy = (minY + maxY) / 2;
     const tx = width / 2 - cx * scale;
     const ty = height / 2 - cy * scale;
-    svg.transition().duration(600).call(
-      zoomBehavior.transform,
-      d3.zoomIdentity.translate(tx, ty).scale(scale)
-    );
+    svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
   }
-
-  svg.call(zoomBehavior);
 
   simulation.on("tick", () => {
     link
@@ -251,12 +252,7 @@ onMounted(async () => {
       .attr("y2", (d: any) => d.target.y);
     node.attr("cx", (d: any) => d.x).attr("cy", (d: any) => d.y);
     label.attr("x", (d: any) => d.x).attr("y", (d: any) => d.y);
-
-    // Auto-fit once when simulation nearly settled
-    if (!hasFitted && simulation!.alpha() < 0.05) {
-      hasFitted = true;
-      fitToView();
-    }
+    silentFit();
   });
 
   // Handle resize
@@ -280,7 +276,7 @@ onMounted(async () => {
       .force("clusterY", d3.forceY<GraphNode>((d) => clusterCenters[nodeCategory[d.id]]?.y ?? h / 2).strength(0.12))
       .force("boundX", d3.forceX(w / 2).strength(0.015))
       .force("boundY", d3.forceY(h / 2).strength(0.015));
-    hasFitted = false;
+    userHasZoomed = false;
     simulation?.alpha(0.3).restart();
   });
   resizeObserver.observe(container.value);

@@ -149,14 +149,14 @@ function triggerSearch() {
               {{ t.tag }}
               <span class="chip-count">{{ t.count }}</span>
             </button>
-            <button
-              v-if="allTagsList.length > 12"
-              class="chip chip-toggle"
-              @click="tagsExpanded = !tagsExpanded"
-            >
-              {{ tagsExpanded ? 'Less' : `+${allTagsList.length - 12} more` }}
-            </button>
           </div>
+          <button
+            v-if="allTagsList.length > 12"
+            class="chip chip-toggle"
+            @click="tagsExpanded = !tagsExpanded"
+          >
+            {{ tagsExpanded ? 'Less' : `+${allTagsList.length - 12}` }}
+          </button>
         </div>
         <button
           v-if="selectedTag || selectedCategory"
@@ -213,11 +213,11 @@ function triggerSearch() {
 .pulse-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--vp-c-divider); }
 
 /* Filter section */
-.filter-section { padding: 0.5rem 0 0.8rem; border-bottom: 1px solid var(--vp-c-divider); margin-bottom: 1rem; }
-.filter-row { display: flex; flex-direction: column; gap: 0.5rem; }
-.filter-group { display: flex; align-items: baseline; gap: 0.5rem; }
+.filter-section { padding: 0.5rem 0 0.8rem; margin-bottom: 1rem; overflow: hidden; }
+.filter-row { display: flex; flex-direction: column; gap: 0.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--vp-c-divider); }
+.filter-group { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
 .filter-label { font-size: 0.72rem; font-weight: 600; color: var(--vp-c-text-3); text-transform: uppercase; letter-spacing: 0.04em; min-width: 56px; flex-shrink: 0; }
-.filter-chips { display: flex; flex-wrap: nowrap; gap: 0.3rem; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+.filter-chips { display: flex; flex-wrap: nowrap; gap: 0.3rem; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; min-width: 0; flex: 1; }
 .filter-chips::-webkit-scrollbar { display: none; }
 .chip { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border: 1px solid var(--vp-c-divider); border-radius: 999px; background: var(--vp-c-bg-soft); color: var(--vp-c-text-2); font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: background 0.15s, border-color 0.15s; flex-shrink: 0; white-space: nowrap; }
 .chip:hover { border-color: var(--vp-c-text-3); }

@@ -44,7 +44,8 @@ interface ProjectedNode extends UniverseNode {
 /* ── Constants ── */
 const MAX_VISIBLE_NODES = 18;
 const PERSPECTIVE = 940;
-const CLOUD_RADIUS = 280;
+const BASE_CLOUD_RADIUS = 280;
+const MIN_CLOUD_RADIUS = 140;
 
 /* ── Props ── */
 const props = defineProps<{ open: boolean }>();
@@ -101,6 +102,16 @@ const activeClusterNodes = computed(() => {
   );
 });
 const activeClusterCount = computed(() => activeClusterNodes.value.length);
+
+// Dynamic radius: scales with node count for visual density
+const cloudRadius = computed(() => {
+  const count = visibleNodes.value.length;
+  if (count <= 3) return MIN_CLOUD_RADIUS;
+  if (count >= MAX_VISIBLE_NODES) return BASE_CLOUD_RADIUS;
+  // Linear interpolation between min and base
+  const t = (count - 3) / (MAX_VISIBLE_NODES - 3);
+  return MIN_CLOUD_RADIUS + t * (BASE_CLOUD_RADIUS - MIN_CLOUD_RADIUS);
+});
 
 function scoreNode(node: UniverseNode) {
   return node.importance * 10 + node.related.length;
@@ -173,12 +184,12 @@ function rotatePoint(
   return { x: x2, y: y1, z: z2 };
 }
 
-function projectPoint(p: { x: number; y: number; z: number }) {
-  const depth = (p.z + CLOUD_RADIUS) / (CLOUD_RADIUS * 2);
+function projectPoint(p: { x: number; y: number; z: number }, radius: number) {
+  const depth = (p.z + radius) / (radius * 2);
   const scale = PERSPECTIVE / (PERSPECTIVE - p.z);
   return {
-    left: 50 + (p.x / CLOUD_RADIUS) * 28,
-    top: 50 + (p.y / CLOUD_RADIUS) * 24,
+    left: 50 + (p.x / radius) * 28,
+    top: 50 + (p.y / radius) * 24,
     scale,
     depth,
     z: p.z,
@@ -205,16 +216,17 @@ function getHudAvoidance(
 const projectedNodes = computed<ProjectedNode[]>(() => {
   const sphere = fibonacciSphere(Math.max(visibleNodes.value.length, 1));
   const hasHud = Boolean(selectedNode.value);
+  const cr = cloudRadius.value;
   return visibleNodes.value
     .map((node, i) => {
       const base = sphere[i];
-      const r = CLOUD_RADIUS + (node.importance - 3) * 14;
+      const r = cr + (node.importance - 3) * 14;
       const rotated = rotatePoint(
         { x: base.x * r, y: base.y * r, z: base.z * r },
         rotation.value.x,
         rotation.value.y
       );
-      const proj = projectPoint(rotated);
+      const proj = projectPoint(rotated, cr);
       const avoid = getHudAvoidance(proj, proj.depth, hasHud);
       const ao = arrivalOrigin.value;
       const fx = ao.width
