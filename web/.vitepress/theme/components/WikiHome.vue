@@ -231,7 +231,7 @@ function triggerSearch() {
 .chip.active .chip-count { background: rgba(255,255,255,0.2); color: #fff; }
 .chip-toggle { color: var(--vp-c-text-3); border-style: dashed; flex-shrink: 0; margin-top: 0.05rem; }
 .chip-toggle:hover { color: var(--vp-c-text-2); }
-.filter-clear { align-self: flex-start; padding: 0.2rem 0.5rem; border: none; border-radius: 4px; background: transparent; color: var(--vp-c-text-3); font-size: 0.72rem; cursor: pointer; font-family: inherit; text-decoration: underline; }
+.filter-clear { align-self: flex-start; padding: 0; border: none; outline: none; border-radius: 0; background: none; color: var(--vp-c-text-3); font-size: 0.72rem; cursor: pointer; font-family: inherit; text-decoration: underline; appearance: none; -webkit-appearance: none; }
 .filter-clear:hover { color: var(--vp-c-text-1); }
 
 /* Cards */
@@ -248,5 +248,6 @@ function triggerSearch() {
 .card-meta, .card-date, .card-evolution { font-size: 0.75rem; color: var(--vp-c-text-3); }
 .card-tags { display: flex; gap: 0.25rem; flex-wrap: wrap; }
 .card-tag { font-size: 0.68rem; padding: 0.08rem 0.4rem; border-radius: 4px; background: var(--vp-c-bg); color: var(--vp-c-text-3); border: 1px solid var(--vp-c-divider); }
-.show-more { display: block; width: 100%; margin-top: 0.8rem; padding: 0.5rem; border: 1px dashed var(--vp-c-divider); border-radius: 8px; background: transparent; color: var(--vp-c-text-2); font-size: 0.82rem; cursor: pointer; font-family: inherit; }
+.show-more { display: block; width: 100%; margin-top: 0.8rem; padding: 0.5rem; border: none; border-radius: 8px; background: var(--vp-c-bg-soft); color: var(--vp-c-text-2); font-size: 0.82rem; cursor: pointer; font-family: inherit; }
+.show-more:hover { color: var(--vp-c-text-1); }
 </style>
