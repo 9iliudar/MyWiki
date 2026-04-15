@@ -1,0 +1,452 @@
+[
+  {
+    "name": "Prompt",
+    "slug": "AI/Prompt",
+    "route": "/pages/AI/Prompt.html",
+    "category": "AI",
+    "title": "Prompt /prɑːmpt/",
+    "tags": [
+      "AI",
+      "LLM",
+      "提示工程"
+    ],
+    "related": [
+      "[[SDD]]",
+      "[[Spec]]",
+      "[[Schema]]",
+      "[[Spec-Schema-Prompt]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-09_sdd-spec-schema-prompt.md"
+    ],
+    "created": "2026-04-09",
+    "updated": "2026-04-10",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-09: 从 Spec-Schema-Prompt 总览中拆分为独立正式概念页",
+      "2026-04-10: 补充英文术语音标规范"
+    ]
+  },
+  {
+    "name": "Schema",
+    "slug": "AI/Schema",
+    "route": "/pages/AI/Schema.html",
+    "category": "AI",
+    "title": "Schema /ˈskiːmə/",
+    "tags": [
+      "AI",
+      "数据结构",
+      "内容建模"
+    ],
+    "related": [
+      "[[SDD]]",
+      "[[Spec]]",
+      "[[Prompt]]",
+      "[[Spec-Schema-Prompt]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-09_sdd-spec-schema-prompt.md"
+    ],
+    "created": "2026-04-09",
+    "updated": "2026-04-10",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-09: 从 Spec-Schema-Prompt 总览中拆分为独立正式概念页",
+      "2026-04-10: 补充英文术语音标规范"
+    ]
+  },
+  {
+    "name": "SDD",
+    "slug": "AI/SDD",
+    "route": "/pages/AI/SDD.html",
+    "category": "AI",
+    "title": "SDD（Spec-Driven Development /spek ˈdrɪvən dɪˈveləpmənt/）",
+    "tags": [
+      "AI",
+      "开发方法论",
+      "工程实践"
+    ],
+    "related": [
+      "[[Spec]]",
+      "[[Schema]]",
+      "[[Prompt]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-09_sdd-spec-schema-prompt.md"
+    ],
+    "created": "2026-04-09",
+    "updated": "2026-04-10",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-09: 初始创建",
+      "2026-04-10: 补充英文术语音标规范",
+      "2026-04-10: 补充与 Vibe Coding 的关系"
+    ]
+  },
+  {
+    "name": "Spec-Schema-Prompt",
+    "slug": "AI/Spec-Schema-Prompt",
+    "route": "/pages/AI/Spec-Schema-Prompt.html",
+    "category": "AI",
+    "title": "Spec-Schema-Prompt 三层模型",
+    "tags": [
+      "AI",
+      "概念模型",
+      "工程实践"
+    ],
+    "related": [
+      "[[SDD]]",
+      "[[Spec]]",
+      "[[Schema]]",
+      "[[Prompt]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-09_sdd-spec-schema-prompt.md"
+    ],
+    "created": "2026-04-09",
+    "updated": "2026-04-10",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-09: 初始创建",
+      "2026-04-10: 补充英文术语音标规范"
+    ]
+  },
+  {
+    "name": "Spec",
+    "slug": "AI/Spec",
+    "route": "/pages/AI/Spec.html",
+    "category": "AI",
+    "title": "Spec /spek/",
+    "tags": [
+      "AI",
+      "开发方法论",
+      "规格说明"
+    ],
+    "related": [
+      "[[SDD]]",
+      "[[Schema]]",
+      "[[Prompt]]",
+      "[[Spec-Schema-Prompt]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-09_sdd-spec-schema-prompt.md"
+    ],
+    "created": "2026-04-09",
+    "updated": "2026-04-10",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-09: 从 Spec-Schema-Prompt 总览中拆分为独立正式概念页",
+      "2026-04-10: 补充英文术语音标规范"
+    ]
+  },
+  {
+    "name": "Cesium",
+    "slug": "IoT/Cesium",
+    "route": "/pages/IoT/Cesium.html",
+    "category": "IoT",
+    "title": "Cesium /ˈsiːziəm/",
+    "tags": [
+      "GIS",
+      "3D可视化",
+      "数字孪生"
+    ],
+    "related": [
+      "[[Digital-Twin]]",
+      "[[Three.js]]",
+      "[[ECharts]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-14_pm-tech-stack-understanding.md"
+    ],
+    "created": "2026-04-14",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-14: 基于产品经理视角进行单概念入库",
+      "2026-04-14: 补充音标与概念边界说明",
+      "2026-04-14: 改为概念词典口径，移除具象案例化注解"
+    ]
+  },
+  {
+    "name": "Digital-Twin",
+    "slug": "IoT/Digital-Twin",
+    "route": "/pages/IoT/Digital-Twin.html",
+    "category": "IoT",
+    "title": "数字孪生（Digital Twin /ˈdɪdʒɪtl twɪn/）",
+    "tags": [
+      "IoT",
+      "数字孪生",
+      "系统工程",
+      "工业数字化"
+    ],
+    "related": [
+      "[[MQTT]]",
+      "[[WebSocket]]",
+      "[[PostgreSQL]]",
+      "[[TimescaleDB]]",
+      "[[Redis]]",
+      "[[Three.js]]",
+      "[[Cesium]]"
+    ],
+    "sources": [],
+    "created": "2026-04-10",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-10: 初始创建",
+      "2026-04-14: 改为概念词典口径，压缩为通用定义与边界"
+    ]
+  },
+  {
+    "name": "ECharts",
+    "slug": "IoT/ECharts",
+    "route": "/pages/IoT/ECharts.html",
+    "category": "IoT",
+    "title": "ECharts /ˈiː tʃɑːrts/",
+    "tags": [
+      "可视化",
+      "前端",
+      "图表"
+    ],
+    "related": [
+      "[[Grafana]]",
+      "[[Digital-Twin]]",
+      "[[Three.js]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-14_pm-tech-stack-understanding.md"
+    ],
+    "created": "2026-04-14",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-14: 基于产品经理视角进行单概念入库",
+      "2026-04-14: 补充音标与概念边界说明",
+      "2026-04-14: 改为概念词典口径，移除具象案例化注解"
+    ]
+  },
+  {
+    "name": "FastAPI",
+    "slug": "IoT/FastAPI",
+    "route": "/pages/IoT/FastAPI.html",
+    "category": "IoT",
+    "title": "FastAPI /ˌfæst ˌeɪpiːˈaɪ/",
+    "tags": [
+      "Python",
+      "后端",
+      "API"
+    ],
+    "related": [
+      "[[MQTT]]",
+      "[[WebSocket]]",
+      "[[Digital-Twin]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-14_pm-tech-stack-understanding.md"
+    ],
+    "created": "2026-04-14",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-14: 基于产品经理视角进行单概念入库",
+      "2026-04-14: 补充音标与概念边界说明",
+      "2026-04-14: 改为概念词典口径，移除具象案例化注解"
+    ]
+  },
+  {
+    "name": "Grafana",
+    "slug": "IoT/Grafana",
+    "route": "/pages/IoT/Grafana.html",
+    "category": "IoT",
+    "title": "Grafana /ɡrəˈfɑːnə/",
+    "tags": [
+      "监控",
+      "运维",
+      "可观测性"
+    ],
+    "related": [
+      "[[ECharts]]",
+      "[[TimescaleDB]]",
+      "[[PostgreSQL]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-14_pm-tech-stack-understanding.md"
+    ],
+    "created": "2026-04-14",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-14: 基于产品经理视角进行单概念入库",
+      "2026-04-14: 补充音标与概念边界说明",
+      "2026-04-14: 改为概念词典口径，移除具象案例化注解"
+    ]
+  },
+  {
+    "name": "MQTT",
+    "slug": "IoT/MQTT",
+    "route": "/pages/IoT/MQTT.html",
+    "category": "IoT",
+    "title": "MQTT /ˌɛm kjuː tiː tiː/",
+    "tags": [
+      "IoT",
+      "通信协议",
+      "设备接入"
+    ],
+    "related": [
+      "[[FastAPI]]",
+      "[[WebSocket]]",
+      "[[Digital-Twin]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-14_pm-tech-stack-understanding.md"
+    ],
+    "created": "2026-04-14",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-14: 基于产品经理视角进行单概念入库",
+      "2026-04-14: 补充音标与概念边界说明",
+      "2026-04-14: 改为概念词典口径，移除具象案例化注解"
+    ]
+  },
+  {
+    "name": "PostgreSQL",
+    "slug": "IoT/PostgreSQL",
+    "route": "/pages/IoT/PostgreSQL.html",
+    "category": "IoT",
+    "title": "PostgreSQL /ˈpoʊstɡrɛs kjuː ˈɛl/",
+    "tags": [
+      "数据库",
+      "关系型数据库",
+      "主数据"
+    ],
+    "related": [
+      "[[TimescaleDB]]",
+      "[[Redis]]",
+      "[[Digital-Twin]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-14_pm-tech-stack-understanding.md"
+    ],
+    "created": "2026-04-14",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-14: 基于产品经理视角进行单概念入库",
+      "2026-04-14: 补充音标与概念边界说明",
+      "2026-04-14: 改为概念词典口径，移除具象案例化注解"
+    ]
+  },
+  {
+    "name": "Redis",
+    "slug": "IoT/Redis",
+    "route": "/pages/IoT/Redis.html",
+    "category": "IoT",
+    "title": "Redis /ˈrɛdɪs/",
+    "tags": [
+      "缓存",
+      "实时系统",
+      "内存数据库"
+    ],
+    "related": [
+      "[[PostgreSQL]]",
+      "[[TimescaleDB]]",
+      "[[WebSocket]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-14_pm-tech-stack-understanding.md"
+    ],
+    "created": "2026-04-14",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-14: 基于产品经理视角进行单概念入库",
+      "2026-04-14: 补充音标与概念边界说明",
+      "2026-04-14: 改为概念词典口径，移除具象案例化注解"
+    ]
+  },
+  {
+    "name": "Three.js",
+    "slug": "IoT/Three.js",
+    "route": "/pages/IoT/Three.js.html",
+    "category": "IoT",
+    "title": "Three.js /θriː dʒeɪ ɛs/",
+    "tags": [
+      "3D渲染",
+      "Web",
+      "数字孪生",
+      "可视化"
+    ],
+    "related": [
+      "[[Digital-Twin]]",
+      "[[Cesium]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-10_threejs-for-digital-twin.md"
+    ],
+    "created": "2026-04-10",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-10: 初始创建",
+      "2026-04-10: 修复正文乱码并保留已掌握结论",
+      "2026-04-14: 改为概念词典口径，移除项目示例化叙述"
+    ]
+  },
+  {
+    "name": "TimescaleDB",
+    "slug": "IoT/TimescaleDB",
+    "route": "/pages/IoT/TimescaleDB.html",
+    "category": "IoT",
+    "title": "TimescaleDB /ˈtaɪmˌskeɪl diː biː/",
+    "tags": [
+      "时序数据库",
+      "PostgreSQL",
+      "IoT"
+    ],
+    "related": [
+      "[[PostgreSQL]]",
+      "[[Redis]]",
+      "[[Digital-Twin]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-14_pm-tech-stack-understanding.md"
+    ],
+    "created": "2026-04-14",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-14: 基于产品经理视角进行单概念入库",
+      "2026-04-14: 补充音标与概念边界说明",
+      "2026-04-14: 改为概念词典口径，移除具象案例化注解"
+    ]
+  },
+  {
+    "name": "WebSocket",
+    "slug": "IoT/WebSocket",
+    "route": "/pages/IoT/WebSocket.html",
+    "category": "IoT",
+    "title": "WebSocket /ˈwɛbˌsɒkɪt/",
+    "tags": [
+      "实时通信",
+      "前端",
+      "后端"
+    ],
+    "related": [
+      "[[FastAPI]]",
+      "[[MQTT]]",
+      "[[Digital-Twin]]"
+    ],
+    "sources": [
+      "sources/archived/2026-04-14_pm-tech-stack-understanding.md"
+    ],
+    "created": "2026-04-14",
+    "updated": "2026-04-14",
+    "mastery": "solid",
+    "evolution": [
+      "2026-04-14: 基于产品经理视角进行单概念入库",
+      "2026-04-14: 补充音标与概念边界说明",
+      "2026-04-14: 改为概念词典口径，移除具象案例化注解"
+    ]
+  }
+]

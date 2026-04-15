@@ -1,0 +1,38 @@
+{
+  "routeByName": {
+    "Prompt": "/pages/AI/Prompt.html",
+    "Schema": "/pages/AI/Schema.html",
+    "SDD": "/pages/AI/SDD.html",
+    "Spec-Schema-Prompt": "/pages/AI/Spec-Schema-Prompt.html",
+    "Spec": "/pages/AI/Spec.html",
+    "Cesium": "/pages/IoT/Cesium.html",
+    "Digital-Twin": "/pages/IoT/Digital-Twin.html",
+    "ECharts": "/pages/IoT/ECharts.html",
+    "FastAPI": "/pages/IoT/FastAPI.html",
+    "Grafana": "/pages/IoT/Grafana.html",
+    "MQTT": "/pages/IoT/MQTT.html",
+    "PostgreSQL": "/pages/IoT/PostgreSQL.html",
+    "Redis": "/pages/IoT/Redis.html",
+    "Three.js": "/pages/IoT/Three.js.html",
+    "TimescaleDB": "/pages/IoT/TimescaleDB.html",
+    "WebSocket": "/pages/IoT/WebSocket.html"
+  },
+  "routeByTitle": {
+    "Prompt /prɑːmpt/": "/pages/AI/Prompt.html",
+    "Schema /ˈskiːmə/": "/pages/AI/Schema.html",
+    "SDD（Spec-Driven Development /spek ˈdrɪvən dɪˈveləpmənt/）": "/pages/AI/SDD.html",
+    "Spec-Schema-Prompt 三层模型": "/pages/AI/Spec-Schema-Prompt.html",
+    "Spec /spek/": "/pages/AI/Spec.html",
+    "Cesium /ˈsiːziəm/": "/pages/IoT/Cesium.html",
+    "数字孪生（Digital Twin /ˈdɪdʒɪtl twɪn/）": "/pages/IoT/Digital-Twin.html",
+    "ECharts /ˈiː tʃɑːrts/": "/pages/IoT/ECharts.html",
+    "FastAPI /ˌfæst ˌeɪpiːˈaɪ/": "/pages/IoT/FastAPI.html",
+    "Grafana /ɡrəˈfɑːnə/": "/pages/IoT/Grafana.html",
+    "MQTT /ˌɛm kjuː tiː tiː/": "/pages/IoT/MQTT.html",
+    "PostgreSQL /ˈpoʊstɡrɛs kjuː ˈɛl/": "/pages/IoT/PostgreSQL.html",
+    "Redis /ˈrɛdɪs/": "/pages/IoT/Redis.html",
+    "Three.js /θriː dʒeɪ ɛs/": "/pages/IoT/Three.js.html",
+    "TimescaleDB /ˈtaɪmˌskeɪl diː biː/": "/pages/IoT/TimescaleDB.html",
+    "WebSocket /ˈwɛbˌsɒkɪt/": "/pages/IoT/WebSocket.html"
+  }
+}

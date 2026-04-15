@@ -11,5 +11,3 @@ build/
 web/node_modules/
 web/.vitepress/dist/
 web/.vitepress/cache/
-web/pages/
-web/data/

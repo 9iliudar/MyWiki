@@ -1,0 +1,312 @@
+{
+  "nodes": [
+    {
+      "id": "Prompt",
+      "title": "Prompt /prɑːmpt/",
+      "tags": [
+        "AI",
+        "LLM",
+        "提示工程"
+      ],
+      "category": "AI",
+      "mastery": "solid"
+    },
+    {
+      "id": "Schema",
+      "title": "Schema /ˈskiːmə/",
+      "tags": [
+        "AI",
+        "数据结构",
+        "内容建模"
+      ],
+      "category": "AI",
+      "mastery": "solid"
+    },
+    {
+      "id": "SDD",
+      "title": "SDD（Spec-Driven Development /spek ˈdrɪvən dɪˈveləpmənt/）",
+      "tags": [
+        "AI",
+        "开发方法论",
+        "工程实践"
+      ],
+      "category": "AI",
+      "mastery": "solid"
+    },
+    {
+      "id": "Spec-Schema-Prompt",
+      "title": "Spec-Schema-Prompt 三层模型",
+      "tags": [
+        "AI",
+        "概念模型",
+        "工程实践"
+      ],
+      "category": "AI",
+      "mastery": "solid"
+    },
+    {
+      "id": "Spec",
+      "title": "Spec /spek/",
+      "tags": [
+        "AI",
+        "开发方法论",
+        "规格说明"
+      ],
+      "category": "AI",
+      "mastery": "solid"
+    },
+    {
+      "id": "Cesium",
+      "title": "Cesium /ˈsiːziəm/",
+      "tags": [
+        "GIS",
+        "3D可视化",
+        "数字孪生"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    },
+    {
+      "id": "Digital-Twin",
+      "title": "数字孪生（Digital Twin /ˈdɪdʒɪtl twɪn/）",
+      "tags": [
+        "IoT",
+        "数字孪生",
+        "系统工程",
+        "工业数字化"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    },
+    {
+      "id": "ECharts",
+      "title": "ECharts /ˈiː tʃɑːrts/",
+      "tags": [
+        "可视化",
+        "前端",
+        "图表"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    },
+    {
+      "id": "FastAPI",
+      "title": "FastAPI /ˌfæst ˌeɪpiːˈaɪ/",
+      "tags": [
+        "Python",
+        "后端",
+        "API"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    },
+    {
+      "id": "Grafana",
+      "title": "Grafana /ɡrəˈfɑːnə/",
+      "tags": [
+        "监控",
+        "运维",
+        "可观测性"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    },
+    {
+      "id": "MQTT",
+      "title": "MQTT /ˌɛm kjuː tiː tiː/",
+      "tags": [
+        "IoT",
+        "通信协议",
+        "设备接入"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    },
+    {
+      "id": "PostgreSQL",
+      "title": "PostgreSQL /ˈpoʊstɡrɛs kjuː ˈɛl/",
+      "tags": [
+        "数据库",
+        "关系型数据库",
+        "主数据"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    },
+    {
+      "id": "Redis",
+      "title": "Redis /ˈrɛdɪs/",
+      "tags": [
+        "缓存",
+        "实时系统",
+        "内存数据库"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    },
+    {
+      "id": "Three.js",
+      "title": "Three.js /θriː dʒeɪ ɛs/",
+      "tags": [
+        "3D渲染",
+        "Web",
+        "数字孪生",
+        "可视化"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    },
+    {
+      "id": "TimescaleDB",
+      "title": "TimescaleDB /ˈtaɪmˌskeɪl diː biː/",
+      "tags": [
+        "时序数据库",
+        "PostgreSQL",
+        "IoT"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    },
+    {
+      "id": "WebSocket",
+      "title": "WebSocket /ˈwɛbˌsɒkɪt/",
+      "tags": [
+        "实时通信",
+        "前端",
+        "后端"
+      ],
+      "category": "IoT",
+      "mastery": "solid"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Prompt",
+      "target": "SDD"
+    },
+    {
+      "source": "Prompt",
+      "target": "Spec"
+    },
+    {
+      "source": "Prompt",
+      "target": "Schema"
+    },
+    {
+      "source": "Prompt",
+      "target": "Spec-Schema-Prompt"
+    },
+    {
+      "source": "Schema",
+      "target": "SDD"
+    },
+    {
+      "source": "Schema",
+      "target": "Spec"
+    },
+    {
+      "source": "Schema",
+      "target": "Spec-Schema-Prompt"
+    },
+    {
+      "source": "SDD",
+      "target": "Spec"
+    },
+    {
+      "source": "Spec-Schema-Prompt",
+      "target": "SDD"
+    },
+    {
+      "source": "Spec-Schema-Prompt",
+      "target": "Spec"
+    },
+    {
+      "source": "Cesium",
+      "target": "Digital-Twin"
+    },
+    {
+      "source": "Cesium",
+      "target": "Three.js"
+    },
+    {
+      "source": "Cesium",
+      "target": "ECharts"
+    },
+    {
+      "source": "Digital-Twin",
+      "target": "MQTT"
+    },
+    {
+      "source": "Digital-Twin",
+      "target": "WebSocket"
+    },
+    {
+      "source": "Digital-Twin",
+      "target": "PostgreSQL"
+    },
+    {
+      "source": "Digital-Twin",
+      "target": "TimescaleDB"
+    },
+    {
+      "source": "Digital-Twin",
+      "target": "Redis"
+    },
+    {
+      "source": "Digital-Twin",
+      "target": "Three.js"
+    },
+    {
+      "source": "ECharts",
+      "target": "Grafana"
+    },
+    {
+      "source": "ECharts",
+      "target": "Digital-Twin"
+    },
+    {
+      "source": "ECharts",
+      "target": "Three.js"
+    },
+    {
+      "source": "FastAPI",
+      "target": "MQTT"
+    },
+    {
+      "source": "FastAPI",
+      "target": "WebSocket"
+    },
+    {
+      "source": "FastAPI",
+      "target": "Digital-Twin"
+    },
+    {
+      "source": "Grafana",
+      "target": "TimescaleDB"
+    },
+    {
+      "source": "Grafana",
+      "target": "PostgreSQL"
+    },
+    {
+      "source": "MQTT",
+      "target": "WebSocket"
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "TimescaleDB"
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "Redis"
+    },
+    {
+      "source": "Redis",
+      "target": "TimescaleDB"
+    },
+    {
+      "source": "Redis",
+      "target": "WebSocket"
+    }
+  ]
+}
