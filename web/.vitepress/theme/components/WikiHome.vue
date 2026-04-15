@@ -16,6 +16,7 @@ const pages = ref<PageMeta[]>([]);
 const selectedTag = ref<string | null>(null);
 const selectedCategory = ref<string | null>(null);
 const showAll = ref(false);
+const tagsExpanded = ref(false);
 
 onMounted(async () => {
   try {
@@ -56,6 +57,10 @@ const allTagsList = computed(() => {
     .map(([tag, count]) => ({ tag, count }));
 });
 
+const visibleTags = computed(() =>
+  tagsExpanded.value ? allTagsList.value : allTagsList.value.slice(0, 12)
+);
+
 const totalTags = computed(() => allTagsList.value.length);
 const latestUpdate = computed(() => {
   if (!pages.value.length) return "";
@@ -77,6 +82,12 @@ function toggleTag(tag: string) {
 
 function toggleCategory(category: string) {
   selectedCategory.value = selectedCategory.value === category ? null : category;
+  showAll.value = false;
+}
+
+function clearFilters() {
+  selectedTag.value = null;
+  selectedCategory.value = null;
   showAll.value = false;
 }
 
@@ -109,33 +120,50 @@ function triggerSearch() {
       </div>
     </section>
 
-    <section v-if="allCategories.length" class="tags-section">
-      <h2 class="section-title">Categories</h2>
-      <div class="tag-cloud">
+    <section class="filter-section">
+      <div class="filter-row">
+        <div class="filter-group">
+          <span class="filter-label">Category</span>
+          <div class="filter-chips">
+            <button
+              v-for="category in allCategories"
+              :key="category"
+              class="chip"
+              :class="{ active: selectedCategory === category }"
+              @click="toggleCategory(category)"
+            >
+              {{ category }}
+            </button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Tags</span>
+          <div class="filter-chips">
+            <button
+              v-for="t in visibleTags"
+              :key="t.tag"
+              class="chip"
+              :class="{ active: selectedTag === t.tag }"
+              @click="toggleTag(t.tag)"
+            >
+              {{ t.tag }}
+              <span class="chip-count">{{ t.count }}</span>
+            </button>
+            <button
+              v-if="allTagsList.length > 12"
+              class="chip chip-toggle"
+              @click="tagsExpanded = !tagsExpanded"
+            >
+              {{ tagsExpanded ? 'Less' : `+${allTagsList.length - 12} more` }}
+            </button>
+          </div>
+        </div>
         <button
-          v-for="category in allCategories"
-          :key="category"
-          class="tag-chip"
-          :class="{ active: selectedCategory === category }"
-          @click="toggleCategory(category)"
+          v-if="selectedTag || selectedCategory"
+          class="filter-clear"
+          @click="clearFilters"
         >
-          {{ category }}
-        </button>
-      </div>
-    </section>
-
-    <section v-if="allTagsList.length" class="tags-section">
-      <h2 class="section-title">Tags</h2>
-      <div class="tag-cloud">
-        <button
-          v-for="t in allTagsList"
-          :key="t.tag"
-          class="tag-chip"
-          :class="{ active: selectedTag === t.tag }"
-          @click="toggleTag(t.tag)"
-        >
-          {{ t.tag }}
-          <span class="tag-count">{{ t.count }}</span>
+          Clear filters
         </button>
       </div>
     </section>
@@ -174,31 +202,45 @@ function triggerSearch() {
 </template>
 
 <style scoped>
-.wiki-home { max-width: 1080px; margin: 0 auto; padding: 2rem 1.5rem 3rem; font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-.search-section { text-align: center; padding: 2.5rem 0 1.5rem; }
-.search-title { font-size: 1.8rem; font-weight: 700; color: var(--vp-c-text-1); margin: 0 0 1.2rem; }
-.search-box { display: flex; align-items: center; gap: 0.6rem; max-width: 680px; margin: 0 auto 1.2rem; padding: 0.85rem 1.2rem; border: 1px solid var(--vp-c-divider); border-radius: 12px; background: var(--vp-c-bg-soft); cursor: pointer; }
-.search-placeholder { flex: 1; text-align: left; color: var(--vp-c-text-3); font-size: 0.95rem; }
+.wiki-home { max-width: 1080px; margin: 0 auto; padding: 1.5rem 1.5rem 3rem; font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.search-section { text-align: center; padding: 1.5rem 0 1rem; }
+.search-title { font-size: 1.6rem; font-weight: 700; color: var(--vp-c-text-1); margin: 0 0 0.8rem; }
+.search-box { display: flex; align-items: center; gap: 0.6rem; max-width: 580px; margin: 0 auto 0.8rem; padding: 0.7rem 1rem; border: 1px solid var(--vp-c-divider); border-radius: 10px; background: var(--vp-c-bg-soft); cursor: pointer; }
+.search-placeholder { flex: 1; text-align: left; color: var(--vp-c-text-3); font-size: 0.9rem; }
 .search-kbd { font-size: 0.7rem; padding: 0.15rem 0.4rem; border: 1px solid var(--vp-c-divider); border-radius: 4px; background: var(--vp-c-bg); color: var(--vp-c-text-3); font-family: inherit; }
-.pulse-row { display: flex; align-items: center; justify-content: center; gap: 0.8rem; font-size: 0.85rem; color: var(--vp-c-text-3); flex-wrap: wrap; }
+.pulse-row { display: flex; align-items: center; justify-content: center; gap: 0.8rem; font-size: 0.8rem; color: var(--vp-c-text-3); flex-wrap: wrap; }
 .pulse-item strong { color: var(--vp-c-text-2); }
 .pulse-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--vp-c-divider); }
-.tags-section { padding: 1rem 0; }
-.section-title { font-size: 1rem; font-weight: 600; color: var(--vp-c-text-2); margin: 0 0 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
-.tag-cloud { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.tag-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.7rem; border: 1px solid var(--vp-c-divider); border-radius: 999px; background: var(--vp-c-bg-soft); color: var(--vp-c-text-2); font-size: 0.8rem; cursor: pointer; font-family: inherit; }
-.tag-chip.active { background: var(--vp-c-brand-1); border-color: var(--vp-c-brand-1); color: #fff; }
-.tag-count { font-size: 0.7rem; background: var(--vp-c-bg); color: var(--vp-c-text-3); padding: 0 0.35rem; border-radius: 999px; min-width: 1.2em; text-align: center; }
-.cards-section { padding: 1rem 0 0; }
-.section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.8rem; }
-.cards-count { font-size: 0.8rem; color: var(--vp-c-text-3); }
-.cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
+
+/* Filter section */
+.filter-section { padding: 0.5rem 0 0.8rem; border-bottom: 1px solid var(--vp-c-divider); margin-bottom: 1rem; }
+.filter-row { display: flex; flex-direction: column; gap: 0.5rem; }
+.filter-group { display: flex; align-items: baseline; gap: 0.5rem; }
+.filter-label { font-size: 0.72rem; font-weight: 600; color: var(--vp-c-text-3); text-transform: uppercase; letter-spacing: 0.04em; min-width: 56px; flex-shrink: 0; }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.chip { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border: 1px solid var(--vp-c-divider); border-radius: 999px; background: var(--vp-c-bg-soft); color: var(--vp-c-text-2); font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: background 0.15s, border-color 0.15s; }
+.chip:hover { border-color: var(--vp-c-text-3); }
+.chip.active { background: var(--vp-c-brand-1); border-color: var(--vp-c-brand-1); color: #fff; }
+.chip-count { font-size: 0.65rem; background: var(--vp-c-bg); color: var(--vp-c-text-3); padding: 0 0.3rem; border-radius: 999px; min-width: 1em; text-align: center; }
+.chip.active .chip-count { background: rgba(255,255,255,0.2); color: #fff; }
+.chip-toggle { color: var(--vp-c-text-3); border-style: dashed; }
+.chip-toggle:hover { color: var(--vp-c-text-2); }
+.filter-clear { align-self: flex-start; padding: 0.2rem 0.5rem; border: none; border-radius: 4px; background: transparent; color: var(--vp-c-text-3); font-size: 0.72rem; cursor: pointer; font-family: inherit; text-decoration: underline; }
+.filter-clear:hover { color: var(--vp-c-text-1); }
+
+/* Cards */
+.section-title { font-size: 0.95rem; font-weight: 600; color: var(--vp-c-text-2); margin: 0; text-transform: uppercase; letter-spacing: 0.04em; }
+.cards-section { padding: 0.8rem 0 0; }
+.section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; }
+.cards-count { font-size: 0.78rem; color: var(--vp-c-text-3); }
+.cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
 @media (max-width: 900px) { .cards-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 640px) { .cards-grid { grid-template-columns: 1fr; } }
-.card { display: flex; flex-direction: column; gap: 0.35rem; padding: 1rem 1.1rem; border: 1px solid var(--vp-c-divider); border-radius: 10px; background: var(--vp-c-bg-soft); text-decoration: none; }
-.card-title { font-weight: 600; font-size: 0.95rem; color: var(--vp-c-text-1); }
-.card-meta, .card-date, .card-evolution { font-size: 0.78rem; color: var(--vp-c-text-3); }
-.card-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; }
-.card-tag { font-size: 0.7rem; padding: 0.1rem 0.45rem; border-radius: 4px; background: var(--vp-c-bg); color: var(--vp-c-text-3); border: 1px solid var(--vp-c-divider); }
-.show-more { display: block; width: 100%; margin-top: 1rem; padding: 0.6rem; border: 1px dashed var(--vp-c-divider); border-radius: 8px; background: transparent; color: var(--vp-c-text-2); font-size: 0.85rem; cursor: pointer; font-family: inherit; }
+@media (max-width: 640px) { .cards-grid { grid-template-columns: 1fr; } .filter-group { flex-direction: column; } .filter-label { min-width: auto; } }
+.card { display: flex; flex-direction: column; gap: 0.3rem; padding: 0.85rem 1rem; border: 1px solid var(--vp-c-divider); border-radius: 10px; background: var(--vp-c-bg-soft); text-decoration: none; transition: border-color 0.15s; }
+.card:hover { border-color: var(--vp-c-text-3); }
+.card-title { font-weight: 600; font-size: 0.92rem; color: var(--vp-c-text-1); }
+.card-meta, .card-date, .card-evolution { font-size: 0.75rem; color: var(--vp-c-text-3); }
+.card-tags { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+.card-tag { font-size: 0.68rem; padding: 0.08rem 0.4rem; border-radius: 4px; background: var(--vp-c-bg); color: var(--vp-c-text-3); border: 1px solid var(--vp-c-divider); }
+.show-more { display: block; width: 100%; margin-top: 0.8rem; padding: 0.5rem; border: 1px dashed var(--vp-c-divider); border-radius: 8px; background: transparent; color: var(--vp-c-text-2); font-size: 0.82rem; cursor: pointer; font-family: inherit; }
 </style>
