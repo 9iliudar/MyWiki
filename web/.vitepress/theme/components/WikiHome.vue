@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import { stripIpaFromTitle } from "../utils/displayTitle";
+import { cleanDisplayName } from "../utils/displayTitle";
 
 interface PageMeta {
   name: string;
@@ -180,7 +180,7 @@ function triggerSearch() {
           :href="page.route"
           class="card"
         >
-          <div class="card-title">{{ stripIpaFromTitle(page.title) }}</div>
+          <div class="card-title">{{ cleanDisplayName(page.title) }}</div>
           <div class="card-meta">{{ page.category }}</div>
           <div v-if="page.tags.length" class="card-tags">
             <span v-for="tag in page.tags.slice(0, 3)" :key="tag" class="card-tag">{{ tag }}</span>
@@ -217,8 +217,9 @@ function triggerSearch() {
 .filter-row { display: flex; flex-direction: column; gap: 0.5rem; }
 .filter-group { display: flex; align-items: baseline; gap: 0.5rem; }
 .filter-label { font-size: 0.72rem; font-weight: 600; color: var(--vp-c-text-3); text-transform: uppercase; letter-spacing: 0.04em; min-width: 56px; flex-shrink: 0; }
-.filter-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
-.chip { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border: 1px solid var(--vp-c-divider); border-radius: 999px; background: var(--vp-c-bg-soft); color: var(--vp-c-text-2); font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: background 0.15s, border-color 0.15s; }
+.filter-chips { display: flex; flex-wrap: nowrap; gap: 0.3rem; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+.filter-chips::-webkit-scrollbar { display: none; }
+.chip { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border: 1px solid var(--vp-c-divider); border-radius: 999px; background: var(--vp-c-bg-soft); color: var(--vp-c-text-2); font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: background 0.15s, border-color 0.15s; flex-shrink: 0; white-space: nowrap; }
 .chip:hover { border-color: var(--vp-c-text-3); }
 .chip.active { background: var(--vp-c-brand-1); border-color: var(--vp-c-brand-1); color: #fff; }
 .chip-count { font-size: 0.65rem; background: var(--vp-c-bg); color: var(--vp-c-text-3); padding: 0 0.3rem; border-radius: 999px; min-width: 1em; text-align: center; }
