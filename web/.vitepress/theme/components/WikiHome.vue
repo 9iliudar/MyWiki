@@ -221,8 +221,9 @@ function triggerSearch() {
 .filter-label { font-size: 0.72rem; font-weight: 600; color: var(--vp-c-text-3); text-transform: uppercase; letter-spacing: 0.04em; min-width: 56px; flex-shrink: 0; }
 .tags-group { align-items: flex-start; }
 .tags-row { display: flex; align-items: flex-start; gap: 0.4rem; min-width: 0; flex: 1; }
-.filter-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; overflow: hidden; max-height: 1.7rem; min-width: 0; flex: 1; }
-.filter-chips.expanded { max-height: none; }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.tags-row .filter-chips { overflow: hidden; max-height: 1.9rem; min-width: 0; flex: 1; }
+.tags-row .filter-chips.expanded { max-height: none; }
 .chip { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border: 1px solid var(--vp-c-divider); border-radius: 999px; background: var(--vp-c-bg-soft); color: var(--vp-c-text-2); font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: background 0.15s, border-color 0.15s; white-space: nowrap; }
 .chip:hover { border-color: var(--vp-c-text-3); }
 .chip.active { background: var(--vp-c-brand-1); border-color: var(--vp-c-brand-1); color: #fff; }
