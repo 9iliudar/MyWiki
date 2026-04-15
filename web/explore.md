@@ -47,20 +47,20 @@ function switchTo(v) {
   right: 16px;
   z-index: 30;
   display: flex;
-  gap: 2px;
-  background: var(--vp-c-bg-soft);
+  gap: 0;
+  background: transparent;
   border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  padding: 3px;
+  border-radius: 6px;
+  padding: 2px;
 }
 
 .view-toggle button {
-  padding: 5px 12px;
+  padding: 4px 14px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   background: transparent;
-  color: var(--vp-c-text-2);
-  font-size: 0.8rem;
+  color: var(--vp-c-text-3);
+  font-size: 0.75rem;
   cursor: pointer;
   font-family: inherit;
   transition: background 0.15s, color 0.15s;
@@ -71,8 +71,8 @@ function switchTo(v) {
 }
 
 .view-toggle button.active {
-  background: #8b5cf6;
-  color: #fff;
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-1);
 }
 </style>
 

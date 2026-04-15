@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
-import { stripIpaFromTitle } from "../utils/displayTitle";
+import { cleanDisplayName } from "../utils/displayTitle";
 import graphRaw from "../../../data/graph.json";
 import routeRaw from "../../../data/route-map.json";
 
@@ -504,7 +504,7 @@ onMounted(async () => {
   // Convert nodes
   allNodes.value = graphData.nodes.map((n: any) => ({
     id: n.id,
-    name: stripIpaFromTitle(n.title),
+    name: cleanDisplayName(n.title),
     title: n.title,
     domain: n.category || "General",
     importance: Math.min(5, 2 + (adj[n.id]?.size ?? 0)),
@@ -629,7 +629,7 @@ watch(activeClusterId, () => {
               '--node-entry-x': node.entryOffsetX,
               '--node-entry-y': node.entryOffsetY,
               '--node-entry-z': node.entryDepth,
-              '--node-scale': node.scale,
+              '--node-scale': node.scale * (0.85 + node.importance * 0.06),
               '--node-arrival-delay': node.arrivalDelay,
               '--node-drift-delay': node.driftDelay,
               '--node-float-x': node.floatX,
@@ -643,7 +643,6 @@ watch(activeClusterId, () => {
           >
             <span class="universe-node-content">
               <span>{{ node.name }}</span>
-              <small>{{ node.domain }}</small>
             </span>
           </button>
         </div>
@@ -840,10 +839,10 @@ watch(activeClusterId, () => {
 .universe-node {
   position: absolute;
   pointer-events: auto;
-  border: 1px solid var(--uni-border);
+  border: 0.5px solid var(--uni-border);
   background: var(--uni-brand-soft);
-  border-radius: 20px;
-  padding: 0.35rem 0.75rem;
+  border-radius: 14px;
+  padding: 0.22rem 0.55rem;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
   font-family: inherit;
@@ -885,7 +884,8 @@ watch(activeClusterId, () => {
 }
 
 .universe-node.is-distant {
-  filter: blur(0.5px);
+  filter: blur(0.8px);
+  opacity: 0.5;
 }
 
 .universe-node.is-warp-target {
@@ -894,20 +894,13 @@ watch(activeClusterId, () => {
 
 .universe-node-content {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1px;
 }
 
 .universe-node-content span {
-  font-size: 0.82rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 500;
   color: var(--uni-text-1);
-}
-
-.universe-node-content small {
-  font-size: 0.65rem;
-  color: var(--uni-text-3);
 }
 
 /* ── Stats ── */
