@@ -45,7 +45,7 @@ interface ProjectedNode extends UniverseNode {
 const MAX_VISIBLE_NODES = 18;
 const PERSPECTIVE = 940;
 const BASE_CLOUD_RADIUS = 280;
-const MIN_CLOUD_RADIUS = 140;
+const MIN_CLOUD_RADIUS = 90;
 
 /* ── Props ── */
 const props = defineProps<{ open: boolean }>();

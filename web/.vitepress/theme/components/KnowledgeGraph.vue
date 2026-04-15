@@ -79,7 +79,7 @@ onMounted(async () => {
 
   // Constellation layout: compute per-category cluster centers on an ellipse
   const categories = [...new Set(graphData.nodes.map((n: any) => n.category || n.tags?.[0] || "General"))];
-  const clusterRadius = Math.min(width, height) * 0.22;
+  const clusterRadius = Math.min(width, height) * 0.13;
   const clusterCenters: Record<string, { x: number; y: number }> = {};
   categories.forEach((cat, i) => {
     const angle = (i * 2 * Math.PI) / categories.length - Math.PI / 2;
@@ -102,9 +102,9 @@ onMounted(async () => {
       d3
         .forceLink<GraphNode, GraphEdge>(graphData.edges)
         .id((d) => d.id)
-        .distance(200)
+        .distance(160)
     )
-    .force("charge", d3.forceManyBody().strength(-300))
+    .force("charge", d3.forceManyBody().strength(-220))
     .force("center", d3.forceCenter(width / 2, height / 2).strength(0.03))
     // Cluster force: pull nodes toward their category center
     .force("clusterX", d3.forceX<GraphNode>((d) => clusterCenters[nodeCategory[d.id]]?.x ?? width / 2).strength(0.12))
@@ -262,7 +262,7 @@ onMounted(async () => {
     const h = container.value.clientHeight;
     svg.attr("viewBox", [0, 0, w, h]);
     // Recompute cluster centers for new dimensions
-    const newRadius = Math.min(w, h) * 0.22;
+    const newRadius = Math.min(w, h) * 0.13;
     categories.forEach((cat, i) => {
       const angle = (i * 2 * Math.PI) / categories.length - Math.PI / 2;
       clusterCenters[cat] = {
