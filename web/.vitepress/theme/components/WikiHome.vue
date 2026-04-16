@@ -105,19 +105,19 @@ function triggerSearch() {
 <template>
   <div class="wiki-home">
     <section class="search-section">
-      <h1 class="search-title">知识库</h1>
+      <h1 class="search-title">Knowledge Hub</h1>
       <div class="search-box" @click="triggerSearch">
-        <span class="search-placeholder">搜索知识...</span>
+        <span class="search-placeholder">Search knowledge...</span>
         <kbd class="search-kbd">Ctrl K</kbd>
       </div>
       <div class="pulse-row">
-        <span class="pulse-item"><strong>{{ totalPages }}</strong> 页面</span>
+        <span class="pulse-item"><strong>{{ totalPages }}</strong> pages</span>
         <span class="pulse-sep"></span>
-        <span class="pulse-item"><strong>{{ allCategories.length }}</strong> 分类</span>
+        <span class="pulse-item"><strong>{{ allCategories.length }}</strong> categories</span>
         <span class="pulse-sep"></span>
-        <span class="pulse-item"><strong>{{ totalTags }}</strong> 标签</span>
+        <span class="pulse-item"><strong>{{ totalTags }}</strong> tags</span>
         <span class="pulse-sep"></span>
-        <span class="pulse-item">最近更新 <strong>{{ latestUpdate }}</strong></span>
+        <span class="pulse-item">Updated <strong>{{ latestUpdate }}</strong></span>
       </div>
     </section>
 
