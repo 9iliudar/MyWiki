@@ -10,6 +10,7 @@ interface PageMeta {
   tags: string[];
   updated: string;
   evolution: string[];
+  mastery: string;
 }
 
 const pages = ref<PageMeta[]>([]);
@@ -104,26 +105,26 @@ function triggerSearch() {
 <template>
   <div class="wiki-home">
     <section class="search-section">
-      <h1 class="search-title">Knowledge Hub</h1>
+      <h1 class="search-title">知识库</h1>
       <div class="search-box" @click="triggerSearch">
-        <span class="search-placeholder">Search knowledge...</span>
+        <span class="search-placeholder">搜索知识...</span>
         <kbd class="search-kbd">Ctrl K</kbd>
       </div>
       <div class="pulse-row">
-        <span class="pulse-item"><strong>{{ totalPages }}</strong> pages</span>
+        <span class="pulse-item"><strong>{{ totalPages }}</strong> 页面</span>
         <span class="pulse-sep"></span>
-        <span class="pulse-item"><strong>{{ allCategories.length }}</strong> categories</span>
+        <span class="pulse-item"><strong>{{ allCategories.length }}</strong> 分类</span>
         <span class="pulse-sep"></span>
-        <span class="pulse-item"><strong>{{ totalTags }}</strong> tags</span>
+        <span class="pulse-item"><strong>{{ totalTags }}</strong> 标签</span>
         <span class="pulse-sep"></span>
-        <span class="pulse-item">Updated <strong>{{ latestUpdate }}</strong></span>
+        <span class="pulse-item">最近更新 <strong>{{ latestUpdate }}</strong></span>
       </div>
     </section>
 
     <section class="filter-section">
       <div class="filter-row">
         <div class="filter-group">
-          <span class="filter-label">Category</span>
+          <span class="filter-label">分类</span>
           <div class="filter-chips">
             <button
               v-for="category in allCategories"
@@ -137,7 +138,7 @@ function triggerSearch() {
           </div>
         </div>
         <div class="filter-group tags-group">
-          <span class="filter-label">Tags</span>
+          <span class="filter-label">标签</span>
           <div class="tags-row">
             <div class="filter-chips" :class="{ expanded: tagsExpanded }">
               <button
@@ -156,7 +157,7 @@ function triggerSearch() {
               class="chip chip-toggle"
               @click="tagsExpanded = !tagsExpanded"
             >
-              {{ tagsExpanded ? 'Less' : `+${allTagsList.length - 10}` }}
+              {{ tagsExpanded ? '收起' : `+${allTagsList.length - 10}` }}
             </button>
           </div>
         </div>
@@ -165,15 +166,19 @@ function triggerSearch() {
           class="filter-clear"
           @click="clearFilters"
         >
-          Clear filters
+          清除筛选
         </button>
       </div>
     </section>
 
+    <div v-if="pages.length && !filteredPages.length" class="empty-state">
+      没有匹配的页面，试试清除筛选条件
+    </div>
+
     <section class="cards-section" v-for="group in groupedByCategory" :key="group.category">
       <div class="section-header">
         <h2 class="section-title">{{ group.category }}</h2>
-        <span class="cards-count">{{ group.total }} pages</span>
+        <span class="cards-count">{{ group.total }} 篇</span>
       </div>
       <div class="cards-grid">
         <a
@@ -182,7 +187,10 @@ function triggerSearch() {
           :href="page.route"
           class="card"
         >
-          <div class="card-title">{{ cleanDisplayName(page.title) }}</div>
+          <div class="card-header">
+            <div class="card-title">{{ cleanDisplayName(page.title) }}</div>
+            <span v-if="page.mastery" class="card-mastery" :class="'mastery-' + page.mastery">{{ page.mastery === 'deep' ? '深入' : page.mastery === 'solid' ? '扎实' : '初识' }}</span>
+          </div>
           <div class="card-meta">{{ page.category }}</div>
           <div v-if="page.tags.length" class="card-tags">
             <span v-for="tag in page.tags.slice(0, 3)" :key="tag" class="card-tag">{{ tag }}</span>
@@ -198,7 +206,7 @@ function triggerSearch() {
       class="show-more"
       @click="showAll = !showAll"
     >
-      {{ showAll ? "Show less" : "Show more" }}
+      {{ showAll ? "收起" : "展开更多" }}
     </button>
   </div>
 </template>
@@ -244,10 +252,16 @@ function triggerSearch() {
 @media (max-width: 640px) { .cards-grid { grid-template-columns: 1fr; } .filter-group { flex-direction: column; } .filter-label { min-width: auto; } }
 .card { display: flex; flex-direction: column; gap: 0.3rem; padding: 0.85rem 1rem; border: 1px solid var(--vp-c-divider); border-radius: 10px; background: var(--vp-c-bg-soft); text-decoration: none; transition: border-color 0.15s; }
 .card:hover { border-color: var(--vp-c-text-3); }
+.card-header { display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; }
 .card-title { font-weight: 600; font-size: 0.92rem; color: var(--vp-c-text-1); }
+.card-mastery { font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 999px; font-weight: 500; flex-shrink: 0; }
+.mastery-deep { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+.mastery-solid { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.mastery-surface { background: rgba(234, 179, 8, 0.1); color: #eab308; }
 .card-meta, .card-date, .card-evolution { font-size: 0.75rem; color: var(--vp-c-text-3); }
 .card-tags { display: flex; gap: 0.25rem; flex-wrap: wrap; }
 .card-tag { font-size: 0.68rem; padding: 0.08rem 0.4rem; border-radius: 4px; background: var(--vp-c-bg); color: var(--vp-c-text-3); border: 1px solid var(--vp-c-divider); }
+.empty-state { text-align: center; padding: 2rem 1rem; color: var(--vp-c-text-3); font-size: 0.88rem; }
 .show-more { display: block; width: 100%; margin-top: 0.8rem; padding: 0.5rem; border: none; border-radius: 8px; background: var(--vp-c-bg-soft); color: var(--vp-c-text-2); font-size: 0.82rem; cursor: pointer; font-family: inherit; }
 .show-more:hover { color: var(--vp-c-text-1); }
 </style>

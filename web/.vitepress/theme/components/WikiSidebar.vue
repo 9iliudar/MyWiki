@@ -19,7 +19,11 @@ const related = computed(() => {
   });
 });
 
-const sources = computed(() => frontmatter.value.sources || []);
+const sources = computed(() =>
+  (frontmatter.value.sources || []).map((s: string) =>
+    s.replace(/^sources\/(archived|inbox)\//, "")
+  )
+);
 const tags = computed(() => frontmatter.value.tags || []);
 const evolution = computed(() => (frontmatter.value.evolution || []).slice().reverse());
 const category = computed(() => frontmatter.value.category || "");
@@ -134,6 +138,7 @@ watch(() => route.path, () => {
   border-radius: 4px;
   font-size: 0.75rem;
   color: var(--vp-c-text-2);
+  border: 1px solid var(--vp-c-divider);
 }
 
 .tags {

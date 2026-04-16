@@ -39,9 +39,25 @@ function routeFromSlug(slug) {
   return `/pages/${slug}.html`;
 }
 
+function cleanDir(dir) {
+  if (!fs.existsSync(dir)) return;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      cleanDir(fullPath);
+      if (fs.readdirSync(fullPath).length === 0) fs.rmdirSync(fullPath);
+    } else if (entry.isFile() && entry.name.endsWith(".md")) {
+      fs.unlinkSync(fullPath);
+    }
+  }
+}
+
 function main() {
   ensureDir(WEB_PAGES_DIR);
   ensureDir(DATA_DIR);
+
+  // Clean stale pages before copying fresh ones
+  cleanDir(WEB_PAGES_DIR);
 
   const files = walkMarkdownFiles(WIKI_PAGES_DIR);
   const allMeta = [];

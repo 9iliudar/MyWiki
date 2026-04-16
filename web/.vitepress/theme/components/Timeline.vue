@@ -11,6 +11,7 @@ interface PageMeta {
   tags: string[];
   evolution: string[];
   route?: string;
+  mastery?: string;
 }
 
 const pages = ref<PageMeta[]>([]);
@@ -65,8 +66,9 @@ function routeForPage(page: PageMeta) {
 
 <template>
   <div class="timeline-view">
-    <h1 class="timeline-heading">Knowledge Timeline</h1>
-    <div class="timeline">
+    <h1 class="timeline-heading">知识时间线</h1>
+    <div v-if="!pages.length" class="empty-state">暂无知识记录</div>
+    <div v-else class="timeline">
       <div v-for="group in groupedByDate" :key="group.date" class="date-group">
         <div class="date-header" @click="toggleCollapse(group.date)">
           <span class="date-dot"></span>
@@ -82,9 +84,12 @@ function routeForPage(page: PageMeta) {
         >
           <div class="item-dot"></div>
           <div class="item-content">
-            <a :href="routeForPage(page)" class="page-title">
-              {{ stripIpaFromTitle(page.title) }}
-            </a>
+            <div class="item-title-row">
+              <a :href="routeForPage(page)" class="page-title">
+                {{ stripIpaFromTitle(page.title) }}
+              </a>
+              <span v-if="page.mastery" class="item-mastery" :class="'mastery-' + page.mastery">{{ page.mastery === 'deep' ? '深入' : page.mastery === 'solid' ? '扎实' : '初识' }}</span>
+            </div>
             <div v-if="page.tags && page.tags.length" class="item-tags">
               <span v-for="tag in page.tags.slice(0, 4)" :key="tag" class="item-tag">
                 {{ tag }}
@@ -113,11 +118,19 @@ function routeForPage(page: PageMeta) {
   font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--vp-c-text-3);
+  font-size: 0.88rem;
+}
+
 .timeline-heading {
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--vp-c-text-1);
-  margin: 0 0 2rem 1.8rem;
+  margin: 0 0 2rem;
+  text-align: center;
 }
 
 .timeline {
@@ -219,6 +232,12 @@ function routeForPage(page: PageMeta) {
   border-bottom: 1px solid var(--vp-c-divider);
 }
 
+.item-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .page-title {
   font-weight: 600;
   font-size: 1.05rem;
@@ -226,6 +245,18 @@ function routeForPage(page: PageMeta) {
   text-decoration: none;
   line-height: 1.4;
 }
+
+.item-mastery {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.mastery-deep { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+.mastery-solid { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.mastery-surface { background: rgba(234, 179, 8, 0.1); color: #eab308; }
 
 .page-title:hover {
   color: var(--vp-c-brand-1);

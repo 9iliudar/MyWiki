@@ -661,8 +661,8 @@ watch(activeClusterId, () => {
 
         <!-- Stats -->
         <div class="universe-stats">
-          <span>Total: {{ allNodes.length }}</span>
-          <span>Center: {{ centerNode?.name }}</span>
+          <span>共 {{ allNodes.length }} 个概念</span>
+          <span>中心: {{ centerNode?.name }}</span>
         </div>
 
         <!-- Category filter -->
@@ -690,7 +690,7 @@ watch(activeClusterId, () => {
         <!-- HUD -->
         <aside v-if="selectedNode" class="universe-hud">
           <div class="universe-hud-top">
-            <p class="universe-hud-label">Selected concept</p>
+            <p class="universe-hud-label">选中概念</p>
           </div>
           <h3>{{ selectedNode.name }}</h3>
           <div class="universe-hud-meta">
@@ -705,7 +705,7 @@ watch(activeClusterId, () => {
             </span>
           </div>
           <button class="universe-hud-open" @click="navigateToPage(selectedNode)">
-            Open page →
+            打开页面 →
           </button>
           <div v-if="quickLinks.length" class="universe-quick-links">
             <button
