@@ -258,10 +258,7 @@ const projectedNodes = computed<ProjectedNode[]>(() => {
 
 /* ── Mastery display ── */
 function masteryLabel(m: string) {
-  return m === "deep" ? "deep" : m === "solid" ? "solid" : "surface";
-}
-function masteryLevel(m: string) {
-  return m === "deep" ? 3 : m === "solid" ? 2 : 1;
+  return m === "deep" ? "深入" : m === "solid" ? "扎实" : "初识";
 }
 
 /* ── Drag / Inertia ── */

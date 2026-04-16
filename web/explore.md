@@ -77,8 +77,8 @@ function switchTo(v) {
 </style>
 
 <div class="view-toggle">
-  <button :class="{ active: view === 'graph' }" @click="switchTo('graph')">Graph</button>
-  <button :class="{ active: view === 'universe' }" @click="switchTo('universe')">Universe</button>
+  <button :class="{ active: view === 'graph' }" @click="switchTo('graph')">图谱</button>
+  <button :class="{ active: view === 'universe' }" @click="switchTo('universe')">星图</button>
 </div>
 
 <KnowledgeGraph v-show="view === 'graph'" />

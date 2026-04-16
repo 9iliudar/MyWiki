@@ -191,7 +191,6 @@ function triggerSearch() {
             <div class="card-title">{{ cleanDisplayName(page.title) }}</div>
             <span v-if="page.mastery" class="card-mastery" :class="'mastery-' + page.mastery">{{ page.mastery === 'deep' ? '深入' : page.mastery === 'solid' ? '扎实' : '初识' }}</span>
           </div>
-          <div class="card-meta">{{ page.category }}</div>
           <div v-if="page.tags.length" class="card-tags">
             <span v-for="tag in page.tags.slice(0, 3)" :key="tag" class="card-tag">{{ tag }}</span>
           </div>
