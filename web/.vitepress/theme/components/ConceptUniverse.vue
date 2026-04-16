@@ -964,8 +964,8 @@ watch(activeClusterId, () => {
 }
 
 .universe-cat-chip.active {
-  background: var(--uni-brand);
-  color: #fff;
+  background: rgba(128, 128, 128, 0.18);
+  color: var(--uni-text-1);
 }
 
 /* ── HUD ── */
